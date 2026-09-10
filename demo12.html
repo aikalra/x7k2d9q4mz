@@ -3,10 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ensur.ai | Demo 11: Karnataka Govt | Gruha Lakshmi Payment Assurance</title>
+<title>Ensur.ai | Demo 12: Karnataka Govt | Anganwadi Nutrition Assurance</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
-  /* ===== GLOBAL ===== */
   * { margin:0; padding:0; box-sizing:border-box; }
   html,body { height:100%; background:#000; font-family:'Inter',-apple-system,'Segoe UI',sans-serif; overflow:hidden; }
   #topbar { height:36px; background:#000; border-bottom:1px solid #2A2A2A; display:flex; align-items:center; justify-content:center; position:relative; z-index:20; }
@@ -19,8 +18,6 @@
   body.presenter #stage { top:0; }
   #stage { position:absolute; top:36px; left:0; right:0; bottom:0; display:flex; }
   #divider { width:2px; background:#2A2A2A; flex:none; }
-
-  /* ===== LEFT: REAL WORLD UI ===== */
   #left { width:50%; background:#0D0D0D; color:#fff; overflow-y:auto; padding:14px 16px 20px; }
   .card { background:#1A1A1A; border:1px solid #262626; border-radius:8px; padding:12px 14px; margin-bottom:12px; transition:all .3s; }
   .card h4 { font-size:10px; color:#888; text-transform:uppercase; letter-spacing:1.2px; margin-bottom:8px; font-weight:600; }
@@ -55,15 +52,13 @@
   .rule-row .rname { color:#bbb; width:170px; flex:none; }
   .rule-row .rres { color:#777; font-size:10px; }
   .rule-row .rres.pass { color:#00C48C; } .rule-row .rres.fail { color:#FF4D4D; }
-  #decisionPanel { min-height:56px; display:flex; align-items:center; justify-content:center; text-align:center; font-size:13px; font-weight:600; color:#555; }
+  #decisionPanel { min-height:56px; display:flex; align-items:center; justify-content:center; text-align:center; font-size:13px; font-weight:600; color:#555; flex-direction:column; gap:6px; }
   #decisionPanel.green { color:#00C48C; border-color:#00C48C; }
   #decisionPanel.red { color:#FF4D4D; border-color:#FF4D4D; }
   #decisionPanel.amber { color:#FFA500; border-color:#FFA500; }
-  #resubmitBtn { margin-top:8px; background:#FFA500; color:#000; border:none; font-size:11px; font-weight:700; padding:6px 18px; border-radius:4px; letter-spacing:1px; cursor:default; }
+  #resubmitBtn { background:#FFA500; color:#000; border:none; font-size:11px; font-weight:700; padding:6px 18px; border-radius:4px; letter-spacing:1px; cursor:default; }
   #leftBanner { display:none; background:#FFA500; color:#000; font-size:12px; font-weight:700; text-align:center; padding:7px; border-radius:6px; margin-bottom:12px; letter-spacing:1px; }
   #thirdSrcWrap { display:none; margin-top:10px; }
-
-  /* ===== RIGHT: ENSUR.AI TERMINAL ===== */
   #right { width:50%; background:#000; display:flex; flex-direction:column; }
   #termHead { padding:8px 12px; color:#fff; font-size:12px; font-family:'Courier New',monospace; border-bottom:1px solid #1c1c1c; flex:none; }
   #term { flex:1; overflow-y:auto; padding:12px; font-family:'Courier New',monospace; font-size:13px; line-height:1.75; }
@@ -94,7 +89,7 @@
 <body>
 <div id="topbar">
   <span class="lbl left">Real World UI</span>
-  <span class="title">Ensur.ai | Demo 11: Karnataka Govt | Gruha Lakshmi Payment Assurance</span>
+  <span class="title">Ensur.ai | Demo 12: Karnataka Govt | Anganwadi Nutrition Assurance</span>
   <span class="lbl right">Ensur.ai Engine</span>
   <button id="presenterBtn" onclick="document.body.classList.toggle('presenter')">PRESENTER MODE</button>
 </div>
@@ -102,38 +97,38 @@
   <div id="left">
     <div id="leftBanner">VERIFICATION INCONCLUSIVE</div>
     <div id="map"></div>
-    <div id="tagline">Gruha Lakshmi ₹2,000/month — the beneficiary must be alive and active before the transfer moves.</div>
+    <div id="tagline">Anganwadi egg supply — entitlement, delivery and distribution must all agree before payment moves.</div>
     <div id="controls"><h4>Run a Scenario</h4><div class="hint">&#9654; Press F1 or click below to run the verification &mdash; ~15 seconds each</div>
       <div class="btn-grid">
         <button class="scn-btn suggest" onclick="F1()"><span class="k">F1</span>Clean Pass</button>
-        <button class="scn-btn" onclick="F2()"><span class="k">F2</span>Rejected: Deceased Beneficiary</button>
-        <button class="scn-btn" onclick="F3()"><span class="k">F3</span>Rejected: Activity Stale</button>
+        <button class="scn-btn" onclick="F2()"><span class="k">F2</span>Shortfall: 420/500 Eggs</button>
+        <button class="scn-btn" onclick="F3()"><span class="k">F3</span>Rejected: Quality Fail</button>
         <button class="scn-btn" onclick="F4()"><span class="k">F4</span>Conflict &rarr; Recovery</button>
         <button class="scn-btn" onclick="F5()"><span class="k">F5</span>Inconclusive</button>
         <button class="scn-btn" onclick="F6()"><span class="k">F6</span>Rail Timeout &rarr; Resubmit</button>
         <button class="scn-btn reset" onclick="reset()"><span class="k">F0</span>Reset</button>
       </div>
     </div>
-    <div class="card" id="eventCard"><h4>Monthly Payment Cycle — September 2026</h4>
-      <div class="ev-row"><span id="eventIcon">&#8377;</span><span id="eventLabel">Awaiting payment-cycle trigger&hellip;</span><span id="eventTs"></span></div>
+    <div class="card" id="eventCard"><h4>Weekly Egg Supply — Delivery Event</h4>
+      <div class="ev-row"><span id="eventIcon">&#129368;</span><span id="eventLabel">Awaiting delivery trigger&hellip;</span><span id="eventTs"></span></div>
     </div>
     <h4 style="font-size:10px;color:#888;text-transform:uppercase;letter-spacing:1.2px;margin:0 0 8px;">Independent Verification Sources</h4>
     <div class="sources">
-      <div class="src-card" id="src1"><span class="lock">&#128274;</span><div class="sname">Gruha Lakshmi Registry &mdash; Beneficiary Feed</div><div class="sts">idle</div></div>
-      <div class="src-card" id="src2"><span class="lock">&#128274;</span><div class="sname">CRS Death Registry &mdash; Civil Records Feed</div><div class="sts">idle</div></div>
+      <div class="src-card" id="src1"><span class="lock">&#128274;</span><div class="sname">Supplier Dispatch Feed &mdash; e-Procurement</div><div class="sts">idle</div></div>
+      <div class="src-card" id="src2"><span class="lock">&#128274;</span><div class="sname">POSHAN Tracker &mdash; AWC Receipt Feed</div><div class="sts">idle</div></div>
     </div>
-    <div id="thirdSrcWrap"><div class="src-card conflict" id="src3"><span class="lock">&#128274;</span><div class="sname">Aadhaar / DBT Activity Signal &mdash; Backup Source</div><div class="sts">conflict</div></div></div>
-    <div class="card" id="profileCard" style="margin-top:12px;"><h4>Beneficiary Profile</h4>
-      <div class="frow" data-f="0"><span>Name</span><span>Lakshmamma Devi</span></div>
-      <div class="frow" data-f="1"><span>Ward</span><span>BBMP Ward 104, Bengaluru Urban</span></div>
-      <div class="frow" data-f="2"><span>Registration</span><span id="pfReg">Gruha Lakshmi &mdash; Enrolled</span></div>
-      <div class="frow" data-f="3"><span>Bank</span><span>DBT-Linked Account (Aadhaar-seeded)</span></div>
-      <div class="frow" data-f="4"><span>Status</span><span id="pfStatus">Live Verification</span></div>
+    <div id="thirdSrcWrap"><div class="src-card conflict" id="src3"><span class="lock">&#128274;</span><div class="sname">GPS Fleet Tracker &mdash; Backup Source</div><div class="sts">conflict</div></div></div>
+    <div class="card" id="profileCard" style="margin-top:12px;"><h4>Entitlement Profile</h4>
+      <div class="frow" data-f="0"><span>Centre</span><span>Anganwadi Centre 42, Tumakuru</span></div>
+      <div class="frow" data-f="1"><span>Children Enrolled</span><span>124</span></div>
+      <div class="frow" data-f="2"><span>Supplier</span><span id="pfSup">Karnataka Egg Suppliers Co-op</span></div>
+      <div class="frow" data-f="3"><span>Entitlement</span><span>3 eggs / child / week</span></div>
+      <div class="frow" data-f="4"><span>Status</span><span id="pfStatus">Delivery Event Live</span></div>
     </div>
     <div class="card"><h4>Deterministic Rule Checks</h4>
-      <div class="rule-row" id="r0"><span class="dot"></span><span class="rname">beneficiary_check</span><span class="rres"></span></div>
-      <div class="rule-row" id="r1"><span class="dot"></span><span class="rname">proof_of_life_check</span><span class="rres"></span></div>
-      <div class="rule-row" id="r2"><span class="dot"></span><span class="rname">duplicate_check</span><span class="rres"></span></div>
+      <div class="rule-row" id="r0"><span class="dot"></span><span class="rname">entitlement_check</span><span class="rres"></span></div>
+      <div class="rule-row" id="r1"><span class="dot"></span><span class="rname">delivery_check</span><span class="rres"></span></div>
+      <div class="rule-row" id="r2"><span class="dot"></span><span class="rname">distribution_check</span><span class="rres"></span></div>
       <div class="rule-row" id="r3"><span class="dot"></span><span class="rname">consensus_check</span><span class="rres"></span></div>
     </div>
     <div class="card" id="decisionPanel">Awaiting event&hellip;</div>
@@ -147,12 +142,10 @@
 </div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-/* ===== MAP ===== */
-var map = L.map('map',{zoomControl:false,attributionControl:false}).setView([12.9716,77.5946],11);
+var map = L.map('map',{zoomControl:false,attributionControl:false}).setView([13.3409,77.1017],11);
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-var marker = L.marker([12.9716,77.5946]).addTo(map).bindTooltip('BBMP Ward 104 — Beneficiary Household');
+var marker = L.marker([13.3409,77.1017]).addTo(map).bindTooltip('Anganwadi Centre 42 — Tumakuru');
 
-/* ===== HELPERS ===== */
 var timers=[];
 function later(fn,ms){ timers.push(setTimeout(fn,ms)); }
 function clearTimers(){ timers.forEach(clearTimeout); timers=[]; }
@@ -170,11 +163,11 @@ function runChecks(results,startDelay,gap){ var d=startDelay;
   },d); d+=gap; }); return d; }
 function populateProfile(opts,delay){ document.querySelectorAll('#profileCard .frow').forEach(function(row,i){
     later(function(){ row.classList.add('show'); },delay+i*200); });
-  if(opts&&opts.reg){ later(function(){ var e=document.getElementById('pfReg'); e.textContent=opts.reg; e.className='bad'; },delay+2*200); }
+  if(opts&&opts.sup){ later(function(){ var e=document.getElementById('pfSup'); e.textContent=opts.sup; e.className='bad'; },delay+2*200); }
   if(opts&&opts.status){ later(function(){ var e=document.getElementById('pfStatus'); e.textContent=opts.status; e.className='bad'; },delay+4*200); } }
 function decision(cls,html){ var p=document.getElementById('decisionPanel'); p.className='card '+cls; p.innerHTML=html; }
 function fireEvent(){ document.getElementById('controls').classList.add('running'); var i=document.getElementById('eventIcon'); i.classList.add('fired');
-  var l=document.getElementById('eventLabel'); l.classList.add('fired'); l.textContent='EVENT TRIGGERED — PAYMENT CYCLE VERIFICATION';
+  var l=document.getElementById('eventLabel'); l.classList.add('fired'); l.textContent='EVENT TRIGGERED — DELIVERY VERIFICATION';
   document.getElementById('eventTs').textContent=ts();
   var m=marker.getElement(); if(m) m.classList.add('pulse-ring'); }
 function reset(){
@@ -184,152 +177,151 @@ function reset(){
   document.getElementById('thirdSrcWrap').style.display='none';
   setSrc('src1','','idle'); setSrc('src2','','idle');
   var i=document.getElementById('eventIcon'); i.classList.remove('fired');
-  var l=document.getElementById('eventLabel'); l.classList.remove('fired'); l.textContent='Awaiting payment-cycle trigger…';
+  var l=document.getElementById('eventLabel'); l.classList.remove('fired'); l.textContent='Awaiting delivery trigger…';
   document.getElementById('eventTs').textContent='';
   document.querySelectorAll('#profileCard .frow').forEach(function(r){ r.classList.remove('show'); });
-  document.getElementById('pfReg').textContent='Gruha Lakshmi — Enrolled'; document.getElementById('pfReg').className='';
-  document.getElementById('pfStatus').textContent='Live Verification'; document.getElementById('pfStatus').className='';
+  document.getElementById('pfSup').textContent='Karnataka Egg Suppliers Co-op'; document.getElementById('pfSup').className='';
+  document.getElementById('pfStatus').textContent='Delivery Event Live'; document.getElementById('pfStatus').className='';
   for(var k=0;k<4;k++){ var row=document.getElementById('r'+k); row.querySelector('.dot').className='dot'; var res=row.querySelector('.rres'); res.textContent=''; res.className='rres'; }
   decision('','Awaiting event…');
   var m=marker.getElement(); if(m) m.classList.remove('pulse-ring');
   document.getElementById('term').innerHTML='<div class="tl" id="idleLine">&gt; Idle &mdash; press F1 or click a scenario on the left to run the verification... <span id="cursor">&#9608;</span></div>';
 }
 
-/* ===== SCENARIOS ===== */
 function F1(){ reset(); fireEvent();
-  later(function(){ setSrc('src1','ok',ts()+' — enrolled'); },600);
-  later(function(){ setSrc('src2','ok',ts()+' — no record'); },1100);
+  later(function(){ setSrc('src1','ok',ts()+' — dispatched'); },600);
+  later(function(){ setSrc('src2','ok',ts()+' — 500/500 received'); },1100);
   populateProfile(null,900);
   var d=logSeq([
-    ['API call received: POST /v1/verify | event_type: gruha_lakshmi_payment_cycle'],
-    ['Source 1 received: Gruha_Lakshmi_Registry | Beneficiary enrolled | DBT-linked account confirmed'],
-    ['Source 2 received: CRS_Death_Registry | NO death record found for beneficiary'],
+    ['API call received: POST /v1/verify | event_type: anganwadi_nutrition_delivery'],
+    ['Source 1 received: Supplier_Dispatch | Invoice #KE-2281 | 500 eggs dispatched'],
+    ['Source 2 received: POSHAN_Tracker | AWC receipt confirmed 500/500 | Grade A'],
     ['Consensus check: PASS — both sources agree'],
-    ['beneficiary_id: [AADHAAR RECEIVED → DESTROYED]','amber']
+    ['aww_id: [AADHAAR RECEIVED → DESTROYED]','amber']
   ],500,200);
-  d=runChecks([['pass','PASS (Enrollment active, Ward 104)'],['pass','PASS (No death record; activity signal 6 days ago)'],['pass','PASS (No Sept-2026 payment on record)'],['pass','PASS']],d+200,500);
+  d=runChecks([['pass','PASS (124 children registered)'],['pass','PASS (500/500 received, Grade A)'],['pass','PASS (Consumption logged, 121 children this week)'],['pass','PASS']],d+200,500);
   d=logSeq([
-    ['DECISION: PAY_AUTHORISED','big'],
-    ['zk_certificate: 0x7F3A91...C44E02'],
-    ['trigger_settlement: true | DBT/PFMS | ₹2,000'],
-    ['Settlement instruction fired to Karnataka DBT Execution Gateway'],
-    ['Resolved in 2.7 seconds','grey']
+    ['DECISION: DELIVERY_VERIFIED','big'],
+    ['zk_certificate: 0x3E77B1...F90A55'],
+    ['trigger_settlement: true | RTGS | ₹18,240'],
+    ['Settlement instruction fired to Karnataka WCD Execution Gateway'],
+    ['Resolved in 2.9 seconds','grey']
   ],500,d+300);
-  later(function(){ decision('green','PAY — ₹2,000 released to Lakshmamma Devi | DBT/PFMS | '+ts()); },d-400);
+  later(function(){ decision('green','₹18,240 released to Karnataka Egg Suppliers Co-op | RTGS | '+ts()); },d-400);
 }
 function F2(){ reset(); fireEvent();
-  later(function(){ setSrc('src1','ok',ts()+' — enrolled'); },600);
-  later(function(){ setSrc('src2','ok',ts()+' — MATCH FOUND'); },1100);
-  populateProfile({status:'Deceased — CRS Matched'},900);
+  later(function(){ setSrc('src1','ok',ts()+' — dispatched'); },600);
+  later(function(){ setSrc('src2','ok',ts()+' — 420/500 received'); },1100);
+  populateProfile({status:'Shortfall — 80 Eggs Missing'},900);
   var d=logSeq([
-    ['API call received: POST /v1/verify | event_type: gruha_lakshmi_payment_cycle'],
-    ['Source 1 received: Gruha_Lakshmi_Registry | Beneficiary enrolled'],
-    ['Source 2 received: CRS_Death_Registry | DEATH RECORD MATCH: CRS-2026-0814-BLR','red'],
-    ['beneficiary_id: [AADHAAR RECEIVED → DESTROYED]','amber']
+    ['API call received: POST /v1/verify | event_type: anganwadi_nutrition_delivery'],
+    ['Source 1 received: Supplier_Dispatch | Invoice #KE-2281 | 500 eggs dispatched'],
+    ['Source 2 received: POSHAN_Tracker | AWC receipt: 420/500 — SHORTFALL 80','red'],
+    ['aww_id: [AADHAAR RECEIVED → DESTROYED]','amber']
   ],500,200);
-  d=runChecks([['pass','PASS (Enrollment active)'],['fail','FAIL (Death record CRS-2026-0814-BLR)'],['pass','PASS (No Sept-2026 payment on record)'],['pass','PASS']],d+200,500);
+  d=runChecks([['pass','PASS (124 children registered)'],['fail','FAIL (Quantity shortfall 420/500)'],['pass','PASS (Consumption logged)'],['pass','PASS']],d+200,500);
   d=logSeq([
-    ['DECISION: HOLD_PAYMENT','red'],
+    ['DECISION: EXCEPTION_FLAGGED','red'],
     ['trigger_settlement: false'],
-    ['Payment blocked. Registry flagged for de-enrollment audit.'],
+    ['Partial payment blocked. Supplier exception raised: 80-egg shortfall.'],
     ['Audit log retained. No certificate issued.','grey']
   ],500,d+300);
-  later(function(){ decision('red','HOLD — Death Record Matched — ₹2,000 Payment Blocked'); },d-400);
+  later(function(){ decision('red','Exception Flagged — Quantity Shortfall (420/500) — Payment Blocked'); },d-400);
 }
 function F3(){ reset(); fireEvent();
-  later(function(){ setSrc('src1','ok',ts()+' — enrolled'); },600);
-  later(function(){ setSrc('src2','ok',ts()+' — no record'); },1100);
-  populateProfile(null,900);
+  later(function(){ setSrc('src1','ok',ts()+' — dispatched'); },600);
+  later(function(){ setSrc('src2','ok',ts()+' — quality REJECT'); },1100);
+  populateProfile({status:'Quality Reject at Receipt'},900);
   var d=logSeq([
-    ['API call received: POST /v1/verify | event_type: gruha_lakshmi_payment_cycle'],
-    ['Source 1 received: Gruha_Lakshmi_Registry | Beneficiary enrolled'],
-    ['Source 2 received: CRS_Death_Registry | NO death record found'],
-    ['beneficiary_id: [AADHAAR RECEIVED → DESTROYED]','amber']
+    ['API call received: POST /v1/verify | event_type: anganwadi_nutrition_delivery'],
+    ['Source 1 received: Supplier_Dispatch | Invoice #KE-2281 | 500 eggs dispatched'],
+    ['Source 2 received: POSHAN_Tracker | AWC receipt: QUALITY REJECT — spoiled batch','red'],
+    ['aww_id: [AADHAAR RECEIVED → DESTROYED]','amber']
   ],500,200);
-  d=runChecks([['pass','PASS (Enrollment active)'],['pass','PASS (No death record)'],['fail','FAIL (Sept-2026 payment already disbursed 05-Sep)'],['pass','PASS']],d+200,500);
+  d=runChecks([['pass','PASS (124 children registered)'],['fail','FAIL (Quality reject at AWC receipt)'],['pass','PASS'],['pass','PASS']],d+200,500);
   d=logSeq([
-    ['DECISION: HOLD_PAYMENT','red'],
+    ['DECISION: EXCEPTION_FLAGGED','red'],
     ['trigger_settlement: false'],
-    ['Duplicate payment blocked. Prior disbursement reference retained for audit.','grey']
+    ['Payment blocked. Replacement supply triggered per contract. Supplier penalty clause noted.'],
+    ['Audit log retained. No certificate issued.','grey']
   ],500,d+300);
-  later(function(){ decision('red','HOLD — Duplicate Payment Attempt Blocked'); },d-400);
+  later(function(){ decision('red','Exception Flagged — Quality Reject at Receipt — Payment Blocked'); },d-400);
 }
 function F4(){ reset(); fireEvent();
   later(function(){ setSrc('src1','conflict','conflict'); setSrc('src2','conflict','conflict'); },600);
   populateProfile(null,900);
   var d=logSeq([
-    ['API call received: POST /v1/verify | event_type: gruha_lakshmi_payment_cycle'],
-    ['Source 1 received: Gruha_Lakshmi_Registry | Beneficiary ACTIVE'],
-    ['Source 2 received: DBT_Activity_Signal | STALE — no activity >90 days'],
+    ['API call received: POST /v1/verify | event_type: anganwadi_nutrition_delivery'],
+    ['Source 1 received: Supplier_Dispatch | GPS geofence: DELIVERED at AWC 42'],
+    ['Source 2 received: POSHAN_Tracker | NO receipt confirmation from AWW'],
     ['SOURCE_CONFLICT detected','amber'],
     ['Holding event. Triggering second verification pull...','amber']
   ],500,200);
-  later(function(){},0); d+=2000;
+  d+=2000;
   d=logSeq([
-    ['SECOND_VERIFICATION_PULL: DBT_Activity_Signal | Fresh reading'],
-    ['Second reading: DBT account activity 6 days ago — matches registry'],
+    ['SECOND_VERIFICATION_PULL: POSHAN_Tracker | Fresh reading'],
+    ['Second reading: AWC receipt confirmed 500/500 (delayed entry)'],
     ['CONFLICT_RESOLVED','big'],
     ['Proceeding to rule checks'],
-    ['beneficiary_id: [AADHAAR RECEIVED → DESTROYED]','amber']
+    ['aww_id: [AADHAAR RECEIVED → DESTROYED]','amber']
   ],500,d);
-  later(function(){ setSrc('src1','ok',ts()+' — enrolled'); setSrc('src2','ok',ts()+' — active'); },d-2000);
-  d=runChecks([['pass','PASS (Enrollment active)'],['pass','PASS (Activity confirmed on second pull)'],['pass','PASS (No Sept-2026 payment on record)'],['pass','PASS']],d+200,500);
+  later(function(){ setSrc('src1','ok',ts()+' — dispatched'); setSrc('src2','ok',ts()+' — 500/500 received'); },d-2000);
+  d=runChecks([['pass','PASS'],['pass','PASS (500/500 on second pull)'],['pass','PASS'],['pass','PASS']],d+200,500);
   d=logSeq([
-    ['DECISION: PAY_AUTHORISED','big'],
-    ['zk_certificate: 0x91BD20...A77F19'],
-    ['trigger_settlement: true | DBT/PFMS | ₹2,000'],
-    ['Settlement instruction fired to Karnataka DBT Execution Gateway']
+    ['DECISION: DELIVERY_VERIFIED','big'],
+    ['zk_certificate: 0x81C4D2...B63E08'],
+    ['trigger_settlement: true | RTGS | ₹18,240'],
+    ['Settlement instruction fired to Karnataka WCD Execution Gateway']
   ],500,d+300);
-  later(function(){ decision('green','PAY — ₹2,000 released to Lakshmamma Devi | DBT/PFMS | '+ts()); },d-400);
+  later(function(){ decision('green','₹18,240 released to Karnataka Egg Suppliers Co-op | RTGS | '+ts()); },d-400);
 }
 function F5(){ reset(); fireEvent();
   later(function(){ setSrc('src1','conflict','conflict'); setSrc('src2','conflict','conflict'); },600);
   populateProfile(null,900);
   var d=logSeq([
-    ['API call received: POST /v1/verify | event_type: gruha_lakshmi_payment_cycle'],
-    ['Source 1 received: Gruha_Lakshmi_Registry | Beneficiary ACTIVE'],
-    ['Source 2 received: DBT_Activity_Signal | STALE — no activity >90 days'],
+    ['API call received: POST /v1/verify | event_type: anganwadi_nutrition_delivery'],
+    ['Source 1 received: Supplier_Dispatch | GPS geofence: DELIVERED at AWC 42'],
+    ['Source 2 received: POSHAN_Tracker | NO receipt confirmation from AWW'],
     ['SOURCE_CONFLICT detected','amber'],
-    ['SECOND_VERIFICATION_PULL: DBT_Activity_Signal'],
-    ['Second reading: still conflicts with registry','amber'],
-    ['THIRD_SOURCE_PULL: Aadhaar_Activity_Register (backup)']
+    ['SECOND_VERIFICATION_PULL: POSHAN_Tracker'],
+    ['Second reading: still no receipt confirmation','amber'],
+    ['THIRD_SOURCE_PULL: GPS_Fleet_Tracker (backup)']
   ],500,200);
   later(function(){ document.getElementById('thirdSrcWrap').style.display='block'; },d-500);
   d=logSeq([
-    ['Aadhaar register: no authentication event >120 days — conflicts with both','amber'],
+    ['Fleet GPS: vehicle stationary 2.1 km from AWC 42 — conflicts with dispatch claim','amber'],
     ['MULTI_SOURCE_CONFLICT — no consensus achievable','red'],
-    ['DECISION: VERIFY_REQUIRED — VERIFICATION_INCONCLUSIVE','amber'],
-    ['No certificate issued. No settlement triggered. No rejection issued.'],
+    ['DECISION: VERIFICATION_INCONCLUSIVE','amber'],
+    ['No certificate issued. No settlement triggered.'],
     ['Full audit log retained: 3 source readings + timestamps'],
-    ['Case automatically flagged for field verification with evidence trail','grey']
+    ['Case automatically flagged for manual review with evidence trail','grey']
   ],500,d);
   later(function(){ document.getElementById('leftBanner').style.display='block';
-    decision('amber','VERIFY — Flagged for Field Verification (evidence trail attached)'); },d-400);
+    decision('amber','Case Escalated — Manual Review Required'); },d-400);
 }
 function F6(){ reset(); fireEvent();
-  later(function(){ setSrc('src1','ok',ts()+' — enrolled'); },600);
-  later(function(){ setSrc('src2','ok',ts()+' — no record'); },1100);
+  later(function(){ setSrc('src1','ok',ts()+' — dispatched'); },600);
+  later(function(){ setSrc('src2','ok',ts()+' — 500/500 received'); },1100);
   populateProfile(null,900);
   var d=logSeq([
-    ['API call received: POST /v1/verify | event_type: gruha_lakshmi_payment_cycle'],
-    ['Source 1 received: Gruha_Lakshmi_Registry | Beneficiary enrolled'],
-    ['Source 2 received: CRS_Death_Registry | NO death record found'],
+    ['API call received: POST /v1/verify | event_type: anganwadi_nutrition_delivery'],
+    ['Source 1 received: Supplier_Dispatch | Invoice #KE-2281 | 500 eggs dispatched'],
+    ['Source 2 received: POSHAN_Tracker | AWC receipt confirmed 500/500'],
     ['Consensus check: PASS'],
-    ['beneficiary_id: [AADHAAR RECEIVED → DESTROYED]','amber']
+    ['aww_id: [AADHAAR RECEIVED → DESTROYED]','amber']
   ],500,200);
   d=runChecks([['pass','PASS'],['pass','PASS'],['pass','PASS'],['pass','PASS']],d+200,500);
   d=logSeq([
-    ['DECISION: PAY_AUTHORISED','big'],
-    ['zk_certificate: 0x55C1E8...D09B73 — PERMANENT'],
-    ['SETTLEMENT_INSTRUCTION_FIRED to Karnataka DBT Execution Gateway'],
-    ['PAYMENT_RAIL_TIMEOUT — DBT network did not respond','red'],
+    ['DECISION: DELIVERY_VERIFIED','big'],
+    ['zk_certificate: 0x66F0A4...E12C90 — PERMANENT'],
+    ['SETTLEMENT_INSTRUCTION_FIRED to Karnataka WCD Execution Gateway'],
+    ['PAYMENT_RAIL_TIMEOUT — RTGS network did not respond','red'],
     ['CERTIFICATE_VALID — PERMANENT. No re-verification required.','big'],
     ['AWAITING_RESUBMISSION','amber']
   ],500,d+300);
   later(function(){ decision('amber','Payment Rail Timeout — Certificate Valid — Resubmit<br><button id="resubmitBtn">RESUBMIT</button>'); },d-400);
 }
 
-/* ===== KEYBOARD: F0–F6 ===== */
 (function(){ var m=location.search.match(/auto=(F[0-6])/); if(m && window[m[1]]) setTimeout(function(){ window[m[1]](); }, 900); })();
 document.addEventListener('keydown',function(e){
   var map={'F1':F1,'F2':F2,'F3':F3,'F4':F4,'F5':F5,'F6':F6,'F0':reset};
