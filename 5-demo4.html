@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ensur.ai | Demo 4: RBI Sandbox | MGNREGS e-Rupee Work Verification</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { height:100%; background:#000; font-family:'Inter',-apple-system,'Segoe UI',sans-serif; overflow:hidden; }
+  #topbar { height:36px; background:#000; border-bottom:1px solid #2A2A2A; display:flex; align-items:center; justify-content:center; position:relative; z-index:20; }
+  #topbar .title { color:#fff; font-size:13px; letter-spacing:.3px; }
+  #topbar .lbl { position:absolute; top:50%; transform:translateY(-50%); font-size:10px; color:#777; text-transform:uppercase; letter-spacing:1px; }
+  #topbar .lbl.left { left:12px; } #topbar .lbl.right { right:120px; }
+  #presenterBtn { position:absolute; right:8px; top:4px; background:#1A1A1A; color:#aaa; border:1px solid #333; font-size:10px; padding:4px 10px; cursor:pointer; border-radius:3px; letter-spacing:1px; }
+  #presenterBtn:hover { color:#fff; border-color:#555; }
+  body.presenter #topbar { display:none; }
+  body.presenter #stage { top:0; }
+  #stage { position:absolute; top:36px; left:0; right:0; bottom:0; display:flex; }
+  #divider { width:2px; background:#2A2A2A; flex:none; }
+  #left { width:50%; background:#0D0D0D; color:#fff; overflow-y:auto; padding:14px 16px 20px; }
+  .card { background:#1A1A1A; border:1px solid #262626; border-radius:8px; padding:12px 14px; margin-bottom:12px; transition:all .3s; }
+  .card h4 { font-size:10px; color:#888; text-transform:uppercase; letter-spacing:1.2px; margin-bottom:8px; font-weight:600; }
+  #map { height:190px; border-radius:8px; border:1px solid #262626; margin-bottom:12px; }
+  .leaflet-tile-pane { filter:invert(1) hue-rotate(180deg) brightness(.85) contrast(.9) saturate(.4); }
+  .pulse-ring { animation:pulseRing 1s ease-out 3; }
+  @keyframes pulseRing { 0%{box-shadow:0 0 0 0 rgba(0,196,140,.6);} 100%{box-shadow:0 0 0 22px rgba(0,196,140,0);} }
+  #eventCard .ev-row { display:flex; align-items:center; gap:12px; }
+  #eventIcon { font-size:26px; color:#666; animation:idlePulse 2.4s infinite; transition:color .3s; }
+  #eventIcon.fired { color:#00C48C; animation:none; }
+  @keyframes idlePulse { 0%,100%{opacity:.45;} 50%{opacity:1;} }
+  #eventLabel { font-size:11px; color:#777; }
+  #eventLabel.fired { color:#00C48C; }
+  #eventTs { font-size:10px; color:#555; margin-left:auto; }
+  .sources { display:flex; gap:10px; }
+  .src-card { flex:1; background:#1A1A1A; border:1px solid #262626; border-radius:8px; padding:10px 12px; text-align:center; transition:all .3s; }
+  .src-card .lock { font-size:20px; display:block; margin-bottom:6px; filter:grayscale(1) opacity(.5); transition:all .3s; }
+  .src-card .sname { font-size:10px; color:#999; line-height:1.35; min-height:27px; }
+  .src-card .sts { font-size:9px; margin-top:5px; color:#666; font-family:'Courier New',monospace; }
+  .src-card.ok { border-color:#00C48C; } .src-card.ok .lock { filter:none; }
+  .src-card.ok .sts { color:#00C48C; }
+  .src-card.conflict { border-color:#FFA500; } .src-card.conflict .lock { filter:sepia(1) saturate(3) hue-rotate(-10deg); }
+  .src-card.conflict .sts { color:#FFA500; }
+  #profileCard .frow { display:flex; justify-content:space-between; font-size:11px; padding:4px 0; border-bottom:1px solid #222; opacity:0; transform:translateX(-6px); transition:all .3s; }
+  #profileCard .frow.show { opacity:1; transform:none; }
+  #profileCard .frow span:first-child { color:#888; } #profileCard .frow span:last-child { color:#eee; }
+  #profileCard .frow span.bad { color:#FF4D4D; }
+  .rule-row { display:flex; align-items:center; font-size:11px; padding:7px 2px; border-bottom:1px solid #222; font-family:'Courier New',monospace; }
+  .rule-row .dot { width:10px; height:10px; border-radius:50%; background:#444; margin-right:10px; flex:none; transition:all .3s; }
+  .rule-row .dot.running { background:#FFA500; animation:idlePulse .6s infinite; }
+  .rule-row .dot.pass { background:#00C48C; } .rule-row .dot.fail { background:#FF4D4D; }
+  .rule-row .rname { color:#bbb; width:170px; flex:none; }
+  .rule-row .rres { color:#777; font-size:10px; }
+  .rule-row .rres.pass { color:#00C48C; } .rule-row .rres.fail { color:#FF4D4D; }
+  #decisionPanel { min-height:56px; display:flex; align-items:center; justify-content:center; text-align:center; font-size:13px; font-weight:600; color:#555; flex-direction:column; gap:6px; }
+  #decisionPanel.green { color:#00C48C; border-color:#00C48C; }
+  #decisionPanel.red { color:#FF4D4D; border-color:#FF4D4D; }
+  #decisionPanel.amber { color:#FFA500; border-color:#FFA500; }
+  #resubmitBtn { background:#FFA500; color:#000; border:none; font-size:11px; font-weight:700; padding:6px 18px; border-radius:4px; letter-spacing:1px; cursor:default; }
+  #leftBanner { display:none; background:#FFA500; color:#000; font-size:12px; font-weight:700; text-align:center; padding:7px; border-radius:6px; margin-bottom:12px; letter-spacing:1px; }
+  #thirdSrcWrap { display:none; margin-top:10px; }
+  #right { width:50%; background:#000; display:flex; flex-direction:column; }
+  #termHead { padding:8px 12px; color:#fff; font-size:12px; font-family:'Courier New',monospace; border-bottom:1px solid #1c1c1c; flex:none; }
+  #term { flex:1; overflow-y:auto; padding:12px; font-family:'Courier New',monospace; font-size:13px; line-height:1.75; }
+  .tl { color:#00FF41; white-space:pre-wrap; word-break:break-word; }
+  .tl .ts { color:#666; }
+  .tl.amber { color:#FFA500; background:rgba(255,165,0,.07); }
+  .tl.red { color:#FF4D4D; }
+  .tl.big { color:#00FF41; font-weight:bold; font-size:15px; }
+  .tl.grey { color:#888; }
+  #cursor { color:#00FF41; animation:blink 1s steps(1) infinite; }
+  @keyframes blink { 50%{opacity:0;} }
+  #termFoot { flex:none; padding:8px 12px; border-top:1px solid #1c1c1c; color:#777; font-size:11px; font-family:'Courier New',monospace; }
+</style>
+</head>
+<body>
+<div id="topbar">
+  <span class="lbl left">Real World UI</span>
+  <span class="title">Ensur.ai | Demo 4: RBI Sandbox | MGNREGS e-Rupee Work Verification</span>
+  <span class="lbl right">Ensur.ai Engine</span>
+  <button id="presenterBtn" onclick="document.body.classList.toggle('presenter')">PRESENTER MODE</button>
+</div>
+<div id="stage">
+  <div id="left">
+    <div id="leftBanner">VERIFICATION INCONCLUSIVE</div>
+    <div id="map"></div>
+    <div class="card" id="eventCard"><h4>Work Attendance — Conditional e-Rupee Payment</h4>
+      <div class="ev-row"><span id="eventIcon">&#128119;</span><span id="eventLabel">Awaiting attendance log…</span><span id="eventTs"></span></div>
+    </div>
+    <h4 style="font-size:10px;color:#888;text-transform:uppercase;letter-spacing:1.2px;margin:0 0 8px;">Independent Verification Sources</h4>
+    <div class="sources">
+      <div class="src-card" id="src1"><span class="lock">&#128274;</span><div class="sname">NREGASoft API &mdash; Government Attendance System</div><div class="sts">idle</div></div>
+      <div class="src-card" id="src2"><span class="lock">&#128274;</span><div class="sname">GPS Geofence &mdash; Site Location Feed</div><div class="sts">idle</div></div>
+    </div>
+    <div id="thirdSrcWrap"><div class="src-card conflict" id="src3"><span class="lock">&#128274;</span><div class="sname">DigiLocker Employment Records API &mdash; Backup Source</div><div class="sts">conflict</div></div></div>
+    <div class="card" id="profileCard" style="margin-top:12px;"><h4>Worker Profile</h4>
+      <div class="frow" data-f="0"><span>Worker</span><span>Geeta Devi</span></div>
+      <div class="frow" data-f="1"><span>Work Site</span><span>Site 042, Barmer (Road Construction)</span></div>
+      <div class="frow" data-f="2"><span>Hours Logged</span><span id="pfHours">8 Hours</span></div>
+      <div class="frow" data-f="3"><span>Enrollment</span><span>MGNREGS Enrolled</span></div>
+      <div class="frow" data-f="4"><span>Status</span><span id="pfStatus">Work Event Live</span></div>
+    </div>
+    <div class="card"><h4>Deterministic Rule Checks</h4>
+      <div class="rule-row" id="r0"><span class="dot"></span><span class="rname">hours_check</span><span class="rres"></span></div>
+      <div class="rule-row" id="r1"><span class="dot"></span><span class="rname">attendance_check</span><span class="rres"></span></div>
+      <div class="rule-row" id="r2"><span class="dot"></span><span class="rname">location_check</span><span class="rres"></span></div>
+      <div class="rule-row" id="r3"><span class="dot"></span><span class="rname">consensus_check</span><span class="rres"></span></div>
+    </div>
+    <div class="card" id="decisionPanel">Awaiting event&hellip;</div>
+  </div>
+  <div id="divider"></div>
+  <div id="right">
+    <div id="termHead">POST https://api.ensur.ai/v1/verify</div>
+    <div id="term"><div class="tl" id="idleLine">&gt; Listening for event... <span id="cursor">&#9608;</span></div></div>
+    <div id="termFoot">Deployed on: Cambridge ISO 27001 Infrastructure | DPDP Aligned: Stateless Execution | Data Residency: India Only | Engine: Deterministic Proxy v1.0 | SHA-256</div>
+  </div>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+var map = L.map('map',{zoomControl:false,attributionControl:false}).setView([25.7457,71.3962],8);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+var marker = L.marker([25.7457,71.3962]).addTo(map).bindTooltip('MGNREGS Site 042 — Barmer, Rajasthan');
+
+var timers=[];
+function later(fn,ms){ timers.push(setTimeout(fn,ms)); }
+function clearTimers(){ timers.forEach(clearTimeout); timers=[]; }
+function ts(){ var d=new Date(); return d.toTimeString().slice(0,8)+'.'+String(d.getMilliseconds()).padStart(3,'0'); }
+function log(text,cls){ var idle=document.getElementById('idleLine'); if(idle) idle.remove();
+  var div=document.createElement('div'); div.className='tl'+(cls?' '+cls:'');
+  div.innerHTML='<span class="ts">['+ts()+']</span> '+text;
+  var t=document.getElementById('term'); t.appendChild(div); t.scrollTop=t.scrollHeight; }
+function logSeq(lines,gap,startDelay){ var d=startDelay||0; lines.forEach(function(l){ later(function(){log(l[0],l[1]);},d); d+=gap; }); return d; }
+function setSrc(id,state,txt){ var c=document.getElementById(id); c.className='src-card'+(state?' '+state:''); c.querySelector('.sts').textContent=txt; }
+function runChecks(results,startDelay,gap){ var d=startDelay;
+  results.forEach(function(r,i){ later(function(){ var row=document.getElementById('r'+i); var dot=row.querySelector('.dot'); var res=row.querySelector('.rres');
+    dot.className='dot running';
+    later(function(){ dot.className='dot '+r[0]; res.textContent=r[1]; res.className='rres '+r[0]; },380);
+  },d); d+=gap; }); return d; }
+function populateProfile(opts,delay){ document.querySelectorAll('#profileCard .frow').forEach(function(row,i){
+    later(function(){ row.classList.add('show'); },delay+i*200); });
+  if(opts){ Object.keys(opts).forEach(function(k){ later(function(){ var e=document.getElementById(k); e.textContent=opts[k][0]; if(opts[k][1]) e.className='bad'; },delay+400); }); } }
+function decision(cls,html){ var p=document.getElementById('decisionPanel'); p.className='card '+cls; p.innerHTML=html; }
+function fireEvent(){ var i=document.getElementById('eventIcon'); i.classList.add('fired');
+  var l=document.getElementById('eventLabel'); l.classList.add('fired'); l.textContent='EVENT TRIGGERED — WORK ATTENDANCE LOGGED';
+  document.getElementById('eventTs').textContent=ts();
+  var m=marker.getElement(); if(m) m.classList.add('pulse-ring'); }
+function reset(){
+  clearTimers();
+  document.getElementById('leftBanner').style.display='none';
+  document.getElementById('thirdSrcWrap').style.display='none';
+  setSrc('src1','','idle'); setSrc('src2','','idle');
+  var i=document.getElementById('eventIcon'); i.classList.remove('fired');
+  var l=document.getElementById('eventLabel'); l.classList.remove('fired'); l.textContent='Awaiting attendance log…';
+  document.getElementById('eventTs').textContent='';
+  document.querySelectorAll('#profileCard .frow').forEach(function(r){ r.classList.remove('show'); });
+  document.getElementById('pfHours').textContent="8 Hours"; document.getElementById('pfHours').className='';
+  document.getElementById('pfStatus').textContent="Work Event Live"; document.getElementById('pfStatus').className='';
+  for(var k=0;k<4;k++){ var row=document.getElementById('r'+k); row.querySelector('.dot').className='dot'; var res=row.querySelector('.rres'); res.textContent=''; res.className='rres'; }
+  decision('','Awaiting event…');
+  var m=marker.getElement(); if(m) m.classList.remove('pulse-ring');
+  document.getElementById('term').innerHTML='<div class="tl" id="idleLine">&gt; Listening for event... <span id="cursor">&#9608;</span></div>';
+}
+
+function F1(){ reset(); fireEvent();
+  later(function(){ setSrc('src1','ok',"" + ts() + " \u2014 present, 8 hrs"); },600);
+  later(function(){ setSrc('src2','ok',"" + ts() + " \u2014 inside geofence"); },1100);
+  populateProfile({},900);
+  var d=200;
+  d=logSeq([["API call received: POST /v1/verify | event_type: mgnregs_work_attendance | site_code: 042", ""], ["Source 1 received: NREGASoft_API | Site 042 | attendance present | 8 hours logged", ""], ["Source 2 received: GPS_Geofence | coordinates inside Site 042 registered geofence", ""], ["Consensus check: PASS \u2014 both sources agree", ""], ["worker_id: [AADHAAR RECEIVED \u2192 DESTROYED]", "amber"]],500,d);
+  d=runChecks([["pass", "PASS (8 hours logged \u2265 8-hour threshold)"], ["pass", "PASS (attendance present in NREGASoft)"], ["pass", "PASS (GPS matches Site 042 geofence)"], ["pass", "PASS"]],d+200,500);
+  d=logSeq([["DECISION: WORK_EVENT_VERIFIED", "big"], ["zk_certificate: 0xMNO345...PQR678", ""], ["trigger_settlement: true | e-Rupee / CBDC | \u20b9220", ""], ["Settlement instruction fired to RBI CBDC Execution Gateway", ""], ["Resolved in 2.5 seconds", "grey"]],500,d);
+  later(function(){ decision('green',"\u20b9220 released to Geeta Devi | e-Rupee / CBDC | " + ts() + ""); },d-400);
+}
+
+function F2(){ reset(); fireEvent();
+  later(function(){ setSrc('src1','ok',"" + ts() + " \u2014 present, 4 hrs"); },600);
+  later(function(){ setSrc('src2','ok',"" + ts() + " \u2014 inside geofence"); },1100);
+  populateProfile({"pfHours": ["4 Hours", true], "pfStatus": ["Payment Blocked", true]},900);
+  var d=200;
+  d=logSeq([["API call received: POST /v1/verify | event_type: mgnregs_work_attendance | site_code: 042", ""], ["Source 1 received: NREGASoft_API | Site 042 | attendance present | 4 hours logged", "red"], ["Source 2 received: GPS_Geofence | coordinates inside Site 042 geofence", ""], ["worker_id: [AADHAAR RECEIVED \u2192 DESTROYED]", "amber"]],500,d);
+  d=runChecks([["fail", "FAIL (4 hours below 8-hour threshold)"], ["pass", "PASS (attendance present)"], ["pass", "PASS (GPS matches geofence)"], ["pass", "PASS"]],d+200,500);
+  d=logSeq([["DECISION: WORK_NOT_VERIFIED", "red"], ["trigger_settlement: false", ""], ["No e-Rupee condition met. No certificate issued. Full audit log retained.", "grey"]],500,d);
+  later(function(){ decision('red',"Payment Blocked \u2014 Hours Below Threshold (4/8)"); },d-400);
+}
+
+function F3(){ reset(); fireEvent();
+  later(function(){ setSrc('src1','ok',"" + ts() + " \u2014 present, 8 hrs"); },600);
+  later(function(){ setSrc('src2','ok',"" + ts() + " \u2014 OUTSIDE geofence"); },1100);
+  populateProfile({"pfStatus": ["Location Mismatch \u2014 Ghost Worker Flag", true]},900);
+  var d=200;
+  d=logSeq([["API call received: POST /v1/verify | event_type: mgnregs_work_attendance | site_code: 042", ""], ["Source 1 received: NREGASoft_API | Site 042 | attendance present | 8 hours logged", ""], ["Source 2 received: GPS_Geofence | coordinates OUTSIDE Site 042 geofence", "red"], ["worker_id: [AADHAAR RECEIVED \u2192 DESTROYED]", "amber"]],500,d);
+  d=runChecks([["pass", "PASS (8 hours logged)"], ["pass", "PASS (attendance present)"], ["fail", "FAIL (GPS outside Site 042 geofence)"], ["pass", "PASS"]],d+200,500);
+  d=logSeq([["DECISION: WORK_NOT_VERIFIED", "red"], ["Reason: Location mismatch \u2014 potential ghost worker event", "red"], ["trigger_settlement: false", ""], ["No certificate issued. Full audit log retained.", "grey"]],500,d);
+  later(function(){ decision('red',"Payment Blocked \u2014 Location Mismatch (Ghost Worker Flag)"); },d-400);
+}
+
+function F4(){ reset(); fireEvent();
+  later(function(){ setSrc('src1','conflict',"conflict"); },600);
+  later(function(){ setSrc('src2','conflict',"conflict"); },1100);
+  populateProfile({},900);
+  var d=200;
+  d=logSeq([["API call received: POST /v1/verify | event_type: mgnregs_work_attendance | site_code: 042", ""], ["Source 1 received: NREGASoft_API | Site 042 | attendance present", ""], ["Source 2 received: GPS_Geofence | coordinates do not match Site 042", "red"], ["SOURCE_CONFLICT detected \u2014 event held, not rejected", "amber"], ["Triggering automatic second verification pull...", "amber"]],500,d);
+  d+=2000;
+  d=logSeq([["SECOND_VERIFICATION_PULL: GPS_Geofence | Fresh reading", ""], ["Second reading: coordinates inside Site 042 geofence (stale fix refreshed)", ""], ["CONFLICT_RESOLVED \u2014 verification continues", "big"], ["worker_id: [AADHAAR RECEIVED \u2192 DESTROYED]", "amber"]],500,d);
+  d=runChecks([["pass", "PASS (8 hours)"], ["pass", "PASS (attendance present)"], ["pass", "PASS (geofence match on second pull)"], ["pass", "PASS"]],d+200,500);
+  d=logSeq([["DECISION: WORK_EVENT_VERIFIED", "big"], ["zk_certificate: 0x29B7E4...C60D18", ""], ["trigger_settlement: true | e-Rupee / CBDC | \u20b9220", ""], ["Settlement instruction fired to RBI CBDC Execution Gateway", ""]],500,d);
+  later(function(){ decision('green',"\u20b9220 released to Geeta Devi | e-Rupee / CBDC | " + ts() + ""); },d-400);
+}
+
+function F5(){ reset(); fireEvent();
+  later(function(){ setSrc('src1','conflict',"conflict"); },600);
+  later(function(){ setSrc('src2','conflict',"conflict"); },1100);
+  populateProfile({},900);
+  var d=200;
+  d=logSeq([["API call received: POST /v1/verify | event_type: mgnregs_work_attendance | site_code: 042", ""], ["Source 1 received: NREGASoft_API | Site 042 | attendance present", ""], ["Source 2 received: GPS_Geofence | coordinates do not match Site 042", "red"], ["SOURCE_CONFLICT detected", "amber"], ["SECOND_VERIFICATION_PULL: GPS_Geofence", ""], ["Second reading: still conflicts with NREGASoft record", "amber"], ["THIRD_SOURCE_PULL: DigiLocker_Employment_Records (backup)", ""]],500,d);
+  later(function(){ document.getElementById('thirdSrcWrap').style.display='block'; },d);
+  d=logSeq([["DigiLocker_Employment_Records: no work record for Site 042 today \u2014 conflict persists", "amber"], ["ALL_THREE_SOURCES_CONFLICT \u2014 no consensus achievable", "red"], ["DECISION: VERIFICATION_INCONCLUSIVE", "amber"], ["No certificate. No settlement. Full audit log: 3 source readings + timestamps", ""], ["Case flagged for manual review with complete evidence trail", "grey"]],500,d);
+  later(function(){ var bb=document.getElementById('leftBanner'); bb.textContent="VERIFICATION INCONCLUSIVE"; bb.style.display='block'; },d-400);
+  later(function(){ decision('amber',"Case Escalated \u2014 Manual Review Required"); },d-400);
+}
+
+function F6(){ reset(); fireEvent();
+  later(function(){ setSrc('src1','ok',"" + ts() + " \u2014 present, 8 hrs"); },600);
+  later(function(){ setSrc('src2','ok',"" + ts() + " \u2014 inside geofence"); },1100);
+  populateProfile({},900);
+  var d=200;
+  d=logSeq([["API call received: POST /v1/verify | event_type: mgnregs_work_attendance | site_code: 042", ""], ["Source 1 received: NREGASoft_API | Site 042 | attendance present | 8 hours logged", ""], ["Source 2 received: GPS_Geofence | coordinates inside Site 042 geofence", ""], ["Consensus check: PASS", ""], ["worker_id: [AADHAAR RECEIVED \u2192 DESTROYED]", "amber"]],500,d);
+  d=runChecks([["pass", "PASS"], ["pass", "PASS"], ["pass", "PASS"], ["pass", "PASS"]],d+200,500);
+  d=logSeq([["DECISION: WORK_EVENT_VERIFIED", "big"], ["zk_certificate: 0xMNO345...PQR678 \u2014 PERMANENT", ""], ["SETTLEMENT_INSTRUCTION_FIRED to RBI CBDC Execution Gateway", ""], ["PAYMENT_RAIL_TIMEOUT \u2014 e-Rupee network did not respond", "red"], ["CERTIFICATE_VALID \u2014 PERMANENT. No re-verification required.", "big"], ["AWAITING_RESUBMISSION", "amber"]],500,d);
+  later(function(){ decision('amber',"Payment Rail Timeout \u2014 Certificate Valid \u2014 Resubmit<br><button id=\"resubmitBtn\">RESUBMIT</button>"); },d-400);
+}
+
+document.addEventListener('keydown',function(e){
+  var map={'F1':F1,'F2':F2,'F3':F3,'F4':F4,'F5':F5,'F6':F6,'F0':reset};
+  if(map[e.key]){ e.preventDefault(); map[e.key](); }
+});
+</script>
+</body>
+</html>
