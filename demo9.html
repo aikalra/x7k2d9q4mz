@@ -70,6 +70,19 @@
   .tl.grey { color:#888; }
   #cursor { color:#00FF41; animation:blink 1s steps(1) infinite; }
   @keyframes blink { 50%{opacity:0;} }
+
+  #tagline { color:#666; font-size:11px; margin:-4px 0 12px; font-style:italic; }
+  #controls { background:#111; border:1px solid #262626; border-radius:8px; padding:10px 12px; margin:0 0 12px; }
+  #controls h4 { font-size:10px; color:#888; text-transform:uppercase; letter-spacing:1.2px; margin-bottom:8px; font-weight:600; }
+  #controls .hint { font-size:10px; color:#00C48C; margin-bottom:8px; font-family:'Courier New',monospace; animation:idlePulse 2.4s infinite; }
+  #controls.running .hint { display:none; }
+  .btn-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+  .scn-btn { background:#1A1A1A; border:1px solid #333; color:#ccc; font-size:10px; font-family:'Courier New',monospace; padding:7px 8px; border-radius:4px; cursor:pointer; text-align:left; transition:all .2s; }
+  .scn-btn:hover { border-color:#00C48C; color:#fff; }
+  .scn-btn .k { color:#00C48C; font-weight:bold; margin-right:6px; }
+  .scn-btn.suggest { border-color:#00C48C; animation:idlePulse 1.6s infinite; }
+  .scn-btn.reset { grid-column:1/3; text-align:center; color:#888; }
+  #controls.running .scn-btn.suggest { border-color:#333; animation:none; }
   #termFoot { flex:none; padding:8px 12px; border-top:1px solid #1c1c1c; color:#777; font-size:11px; font-family:'Courier New',monospace; }
 </style>
 </head>
@@ -84,6 +97,18 @@
   <div id="left">
     <div id="leftBanner">VERIFICATION INCONCLUSIVE</div>
     <div id="map"></div>
+    <div id="tagline">PMFBY parametric weather claim — the trigger must be confirmed by independent sources.</div>
+    <div id="controls"><h4>Run a Scenario</h4><div class="hint">&#9654; Press F1 or click below to run the verification &mdash; ~15 seconds each</div>
+      <div class="btn-grid">
+        <button class="scn-btn suggest" onclick="F1()"><span class="k">F1</span>Clean Pass</button>
+        <button class="scn-btn" onclick="F2()"><span class="k">F2</span>Rejected: Rainfall Normal</button>
+        <button class="scn-btn" onclick="F3()"><span class="k">F3</span>Hold: Damage Not Confirmed</button>
+        <button class="scn-btn" onclick="F4()"><span class="k">F4</span>Conflict &rarr; Recovery</button>
+        <button class="scn-btn" onclick="F5()"><span class="k">F5</span>Inconclusive</button>
+        <button class="scn-btn" onclick="F6()"><span class="k">F6</span>Rail Timeout &rarr; Resubmit</button>
+        <button class="scn-btn reset" onclick="reset()"><span class="k">F0</span>Reset</button>
+      </div>
+    </div>
     <div class="card" id="eventCard"><h4>Parametric Crop Insurance — e-Rupee Payout</h4>
       <div class="ev-row"><span id="eventIcon">&#127807;</span><span id="eventLabel">Monitoring rainfall &amp; soil feeds…</span><span id="eventTs"></span></div>
     </div>
@@ -111,7 +136,7 @@
   <div id="divider"></div>
   <div id="right">
     <div id="termHead">POST https://api.ensur.ai/v1/verify</div>
-    <div id="term"><div class="tl" id="idleLine">&gt; Listening for event... <span id="cursor">&#9608;</span></div></div>
+    <div id="term"><div class="tl" id="idleLine">&gt; Idle &mdash; press F1 or click a scenario on the left to run the verification... <span id="cursor">&#9608;</span></div></div>
     <div id="termFoot">Deployed on: Cambridge ISO 27001 Infrastructure | DPDP Aligned: Stateless Execution | Data Residency: India Only | Engine: Deterministic Proxy v1.0 | SHA-256</div>
   </div>
 </div>
@@ -140,12 +165,13 @@ function populateProfile(opts,delay){ document.querySelectorAll('#profileCard .f
     later(function(){ row.classList.add('show'); },delay+i*200); });
   if(opts){ Object.keys(opts).forEach(function(k){ later(function(){ var e=document.getElementById(k); e.textContent=opts[k][0]; if(opts[k][1]) e.className='bad'; },delay+400); }); } }
 function decision(cls,html){ var p=document.getElementById('decisionPanel'); p.className='card '+cls; p.innerHTML=html; }
-function fireEvent(){ var i=document.getElementById('eventIcon'); i.classList.add('fired');
+function fireEvent(){ document.getElementById('controls').classList.add('running'); var i=document.getElementById('eventIcon'); i.classList.add('fired');
   var l=document.getElementById('eventLabel'); l.classList.add('fired'); l.textContent='EVENT TRIGGERED — PARAMETRIC THRESHOLD BREACH';
   document.getElementById('eventTs').textContent=ts();
   var m=marker.getElement(); if(m) m.classList.add('pulse-ring'); }
 function reset(){
   clearTimers();
+  document.getElementById('controls').classList.remove('running');
   document.getElementById('leftBanner').style.display='none';
   document.getElementById('thirdSrcWrap').style.display='none';
   setSrc('src1','','idle'); setSrc('src2','','idle');
@@ -157,7 +183,7 @@ function reset(){
   for(var k=0;k<4;k++){ var row=document.getElementById('r'+k); row.querySelector('.dot').className='dot'; var res=row.querySelector('.rres'); res.textContent=''; res.className='rres'; }
   decision('','Awaiting event…');
   var m=marker.getElement(); if(m) m.classList.remove('pulse-ring');
-  document.getElementById('term').innerHTML='<div class="tl" id="idleLine">&gt; Listening for event... <span id="cursor">&#9608;</span></div>';
+  document.getElementById('term').innerHTML='<div class="tl" id="idleLine">&gt; Idle &mdash; press F1 or click a scenario on the left to run the verification... <span id="cursor">&#9608;</span></div>';
 }
 
 function F1(){ reset(); fireEvent();
@@ -229,6 +255,8 @@ function F6(){ reset(); fireEvent();
   later(function(){ decision('amber',"Payment Rail Timeout \u2014 Certificate Valid \u2014 Resubmit<br><button id=\"resubmitBtn\">RESUBMIT</button>"); },d-400);
 }
 
+
+(function(){ var m=location.search.match(/auto=(F[0-6])/); if(m && window[m[1]]) setTimeout(function(){ window[m[1]](); }, 900); })();
 document.addEventListener('keydown',function(e){
   var map={'F1':F1,'F2':F2,'F3':F3,'F4':F4,'F5':F5,'F6':F6,'F0':reset};
   if(map[e.key]){ e.preventDefault(); map[e.key](); }
