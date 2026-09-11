@@ -193,7 +193,7 @@ function F1(){ reset(); fireEvent();
   var d=200;
   d=logSeq([["API call received: POST /v1/verify | event_type: coldchain_lc_verification | shipment: CIPLA-LC-2291", ""], ["Source 1 received: IoT_Sensor_Network | temperature 2-8\u00b0C maintained throughout transit", ""], ["Source 2 received: Cold_Storage_Monitoring | facility log confirms continuous cold chain", ""], ["Consensus check: PASS \u2014 all records agree", ""], ["shipper_id: [DUNS/IEC RECEIVED \u2192 DESTROYED \u2014 DPDP Compliant]", "amber"]],500,d);
   d=runChecks([["pass", "PASS (2-8\u00b0C maintained, zero excursions)"], ["pass", "PASS (humidity within range)"], ["pass", "PASS (unbroken chain of custody, 14 handoffs)"], ["pass", "PASS"]],d+200,500);
-  d=logSeq([["DECISION: COLDCHAIN_VERIFIED", "big"], ["zk_certificate: 0xLC2291...COLD99 | SHA-256 signed", ""], ["trigger_settlement: true | SWIFT MT700 | $2.4M LC \u2192 Cipla Ltd", ""], ["Settlement instruction fired to HDFC Trade Finance Execution Gateway", ""], ["Resolved in 2.7 seconds", "grey"]],500,d);
+  d=logSeq([["DECISION: COLDCHAIN_VERIFIED", "big"], ["certificate_sha256: 0xLC2291...COLD99 | SHA-256 signed", ""], ["trigger_settlement: true | SWIFT MT700 | $2.4M LC \u2192 Cipla Ltd", ""], ["Settlement instruction fired to HDFC Trade Finance Execution Gateway", ""], ["Resolved in 2.7 seconds", "grey"]],500,d);
   later(function(){ decision('green',"$2.4M LC settled to Cipla Ltd | SWIFT MT700 | Cold Chain Certified | " + ts() + ""); },d-400);
 }
 
@@ -228,7 +228,7 @@ function F4(){ reset(); fireEvent();
   d+=2000;
   d=logSeq([["SECOND_VERIFICATION_PULL: Cold_Storage_Monitoring | Fresh log sync", ""], ["Second reading: excursion was sensor calibration artefact \u2014 log corrected, cold chain intact", ""], ["CONFLICT_RESOLVED \u2014 verification continues", "big"], ["shipper_id: [DUNS/IEC RECEIVED \u2192 DESTROYED \u2014 DPDP Compliant]", "amber"]],500,d);
   d=runChecks([["pass", "PASS (temperature maintained)"], ["pass", "PASS (humidity within range)"], ["pass", "PASS (custody intact on second pull)"], ["pass", "PASS"]],d+200,500);
-  d=logSeq([["DECISION: COLDCHAIN_VERIFIED", "big"], ["zk_certificate: 0xLC2291...COLD99 | SHA-256 signed", ""], ["trigger_settlement: true | SWIFT MT700 | $2.4M LC \u2192 Cipla Ltd", ""], ["Settlement instruction fired to HDFC Trade Finance Execution Gateway", ""]],500,d);
+  d=logSeq([["DECISION: COLDCHAIN_VERIFIED", "big"], ["certificate_sha256: 0xLC2291...COLD99 | SHA-256 signed", ""], ["trigger_settlement: true | SWIFT MT700 | $2.4M LC \u2192 Cipla Ltd", ""], ["Settlement instruction fired to HDFC Trade Finance Execution Gateway", ""]],500,d);
   later(function(){ decision('green',"$2.4M LC settled to Cipla Ltd | SWIFT MT700 | Cold Chain Certified | " + ts() + ""); },d-400);
 }
 
@@ -251,7 +251,7 @@ function F6(){ reset(); fireEvent();
   var d=200;
   d=logSeq([["API call received: POST /v1/verify | event_type: coldchain_lc_verification | shipment: CIPLA-LC-2291", ""], ["Source 1 received: IoT_Sensor_Network | temperature 2-8\u00b0C maintained", ""], ["Source 2 received: Cold_Storage_Monitoring | facility log confirms cold chain", ""], ["Consensus check: PASS", ""], ["shipper_id: [DUNS/IEC RECEIVED \u2192 DESTROYED \u2014 DPDP Compliant]", "amber"]],500,d);
   d=runChecks([["pass", "PASS"], ["pass", "PASS"], ["pass", "PASS"], ["pass", "PASS"]],d+200,500);
-  d=logSeq([["DECISION: COLDCHAIN_VERIFIED", "big"], ["zk_certificate: 0xLC2291...COLD99 \u2014 PERMANENT", ""], ["SETTLEMENT_INSTRUCTION_FIRED to HDFC Trade Finance Execution Gateway", ""], ["PAYMENT_RAIL_TIMEOUT \u2014 SWIFT MT700 network did not respond", "red"], ["CERTIFICATE_VALID \u2014 PERMANENT. No re-verification required.", "big"], ["AWAITING_RESUBMISSION", "amber"]],500,d);
+  d=logSeq([["DECISION: COLDCHAIN_VERIFIED", "big"], ["certificate_sha256: 0xLC2291...COLD99 \u2014 PERMANENT", ""], ["SETTLEMENT_INSTRUCTION_FIRED to HDFC Trade Finance Execution Gateway", ""], ["PAYMENT_RAIL_TIMEOUT \u2014 SWIFT MT700 network did not respond", "red"], ["CERTIFICATE_VALID \u2014 PERMANENT. No re-verification required.", "big"], ["AWAITING_RESUBMISSION", "amber"]],500,d);
   later(function(){ decision('amber',"Payment Rail Timeout \u2014 Certificate Valid \u2014 Resubmit<br><button id=\"resubmitBtn\">RESUBMIT</button>"); },d-400);
 }
 
