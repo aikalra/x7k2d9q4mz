@@ -193,7 +193,7 @@ function F1(){ reset(); fireEvent();
   var d=200;
   d=logSeq([["API call received: POST /v1/verify | event_type: trade_finance_verification | shipment: SWIFT-4491", ""], ["Source 1 received: Port_Authority_API | Bill of Lading confirmed | vessel cleared", ""], ["Source 2 received: Customs_EDI | clearance order issued", ""], ["Document hash verification: BoL hash 0xA4F7...C291 matches Port Authority registry hash", ""], ["exporter_id: [PAN/IEC RECEIVED \u2192 DESTROYED \u2014 DPDP Compliant]", "amber"]],500,d);
   d=runChecks([["pass", "PASS (500MT Basmati loaded, vessel cleared)"], ["pass", "PASS (customs clearance order issued)"], ["pass", "PASS (BoL hash matches registry)"], ["pass", "PASS"]],d+200,500);
-  d=logSeq([["DECISION: SHIPMENT_VERIFIED", "big"], ["zk_certificate: 0xTF789...SWIFT441 | SHA-256 signed", ""], ["trigger_settlement: true | SWIFT MT103 | \u20b92,18,00,000 \u2192 Vikram Exports Pvt Ltd", ""], ["FEMA compliance record attached", ""], ["Settlement instruction fired to HDFC Trade Finance Execution Gateway", ""], ["Resolved in 2.8 seconds", "grey"]],500,d);
+  d=logSeq([["DECISION: SHIPMENT_VERIFIED", "big"], ["certificate_sha256: 0xTF789...SWIFT441 | SHA-256 signed", ""], ["trigger_settlement: true | SWIFT MT103 | \u20b92,18,00,000 \u2192 Vikram Exports Pvt Ltd", ""], ["FEMA compliance record attached", ""], ["Settlement instruction fired to HDFC Trade Finance Execution Gateway", ""], ["Resolved in 2.8 seconds", "grey"]],500,d);
   later(function(){ decision('green',"\u20b92,18,00,000 released to Vikram Exports Pvt Ltd | SWIFT MT103 | FEMA Compliant | " + ts() + ""); },d-400);
 }
 
@@ -228,7 +228,7 @@ function F4(){ reset(); fireEvent();
   d+=2000;
   d=logSeq([["SECOND_VERIFICATION_PULL: Customs_EDI | Fresh reading", ""], ["Second reading: clearance order issued (EDI queue lag resolved)", ""], ["CONFLICT_RESOLVED \u2014 verification continues", "big"], ["exporter_id: [PAN/IEC RECEIVED \u2192 DESTROYED \u2014 DPDP Compliant]", "amber"]],500,d);
   d=runChecks([["pass", "PASS"], ["pass", "PASS (clearance confirmed on second pull)"], ["pass", "PASS (BoL hash matches)"], ["pass", "PASS"]],d+200,500);
-  d=logSeq([["DECISION: SHIPMENT_VERIFIED", "big"], ["zk_certificate: 0xTF789...SWIFT441 | SHA-256 signed", ""], ["trigger_settlement: true | SWIFT MT103 | \u20b92,18,00,000 \u2192 Vikram Exports Pvt Ltd", ""], ["Settlement instruction fired to HDFC Trade Finance Execution Gateway", ""]],500,d);
+  d=logSeq([["DECISION: SHIPMENT_VERIFIED", "big"], ["certificate_sha256: 0xTF789...SWIFT441 | SHA-256 signed", ""], ["trigger_settlement: true | SWIFT MT103 | \u20b92,18,00,000 \u2192 Vikram Exports Pvt Ltd", ""], ["Settlement instruction fired to HDFC Trade Finance Execution Gateway", ""]],500,d);
   later(function(){ decision('green',"\u20b92,18,00,000 released to Vikram Exports Pvt Ltd | SWIFT MT103 | FEMA Compliant | " + ts() + ""); },d-400);
 }
 
@@ -251,7 +251,7 @@ function F6(){ reset(); fireEvent();
   var d=200;
   d=logSeq([["API call received: POST /v1/verify | event_type: trade_finance_verification | shipment: SWIFT-4491", ""], ["Source 1 received: Port_Authority_API | Bill of Lading confirmed", ""], ["Source 2 received: Customs_EDI | clearance order issued", ""], ["Document hash verification: BoL hash matches Port Authority registry", ""], ["exporter_id: [PAN/IEC RECEIVED \u2192 DESTROYED \u2014 DPDP Compliant]", "amber"]],500,d);
   d=runChecks([["pass", "PASS"], ["pass", "PASS"], ["pass", "PASS"], ["pass", "PASS"]],d+200,500);
-  d=logSeq([["DECISION: SHIPMENT_VERIFIED", "big"], ["zk_certificate: 0xTF789...SWIFT441 \u2014 PERMANENT", ""], ["SETTLEMENT_INSTRUCTION_FIRED to HDFC Trade Finance Execution Gateway", ""], ["PAYMENT_RAIL_TIMEOUT \u2014 SWIFT network did not respond", "red"], ["CERTIFICATE_VALID \u2014 PERMANENT. No re-verification required.", "big"], ["AWAITING_RESUBMISSION", "amber"]],500,d);
+  d=logSeq([["DECISION: SHIPMENT_VERIFIED", "big"], ["certificate_sha256: 0xTF789...SWIFT441 \u2014 PERMANENT", ""], ["SETTLEMENT_INSTRUCTION_FIRED to HDFC Trade Finance Execution Gateway", ""], ["PAYMENT_RAIL_TIMEOUT \u2014 SWIFT network did not respond", "red"], ["CERTIFICATE_VALID \u2014 PERMANENT. No re-verification required.", "big"], ["AWAITING_RESUBMISSION", "amber"]],500,d);
   later(function(){ decision('amber',"Payment Rail Timeout \u2014 Certificate Valid \u2014 Resubmit<br><button id=\"resubmitBtn\">RESUBMIT</button>"); },d-400);
 }
 
