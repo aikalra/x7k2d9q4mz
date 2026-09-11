@@ -202,7 +202,7 @@ function F1(){ reset(); fireEvent();
   d=runChecks([['pass','PASS (124 children registered)'],['pass','PASS (500/500 received, Grade A)'],['pass','PASS (Consumption logged, 121 children this week)'],['pass','PASS']],d+200,500);
   d=logSeq([
     ['DECISION: DELIVERY_VERIFIED','big'],
-    ['zk_certificate: 0x3E77B1...F90A55'],
+    ['certificate_sha256: 0x3E77B1...F90A55'],
     ['trigger_settlement: true | RTGS | ₹18,240'],
     ['Settlement instruction fired to Karnataka WCD Execution Gateway'],
     ['Resolved in 2.9 seconds','grey']
@@ -269,7 +269,7 @@ function F4(){ reset(); fireEvent();
   d=runChecks([['pass','PASS'],['pass','PASS (500/500 on second pull)'],['pass','PASS'],['pass','PASS']],d+200,500);
   d=logSeq([
     ['DECISION: DELIVERY_VERIFIED','big'],
-    ['zk_certificate: 0x81C4D2...B63E08'],
+    ['certificate_sha256: 0x81C4D2...B63E08'],
     ['trigger_settlement: true | RTGS | ₹18,240'],
     ['Settlement instruction fired to Karnataka WCD Execution Gateway']
   ],500,d+300);
@@ -313,7 +313,7 @@ function F6(){ reset(); fireEvent();
   d=runChecks([['pass','PASS'],['pass','PASS'],['pass','PASS'],['pass','PASS']],d+200,500);
   d=logSeq([
     ['DECISION: DELIVERY_VERIFIED','big'],
-    ['zk_certificate: 0x66F0A4...E12C90 — PERMANENT'],
+    ['certificate_sha256: 0x66F0A4...E12C90 — PERMANENT'],
     ['SETTLEMENT_INSTRUCTION_FIRED to Karnataka WCD Execution Gateway'],
     ['PAYMENT_RAIL_TIMEOUT — RTGS network did not respond','red'],
     ['CERTIFICATE_VALID — PERMANENT. No re-verification required.','big'],
