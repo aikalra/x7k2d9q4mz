@@ -195,7 +195,7 @@ function F1(){ reset(); fireEvent();
   var d=200;
   d=logSeq([["API call received: POST /v1/verify | event_type: jsy_hospital_delivery", ""], ["Source 1 received: HMIS_API | Civil Hospital Rohtak | live birth registered", ""], ["Source 2 received: Beneficiary_Registry | JSY enrollment confirmed", ""], ["Consensus check: PASS \u2014 both sources agree", ""], ["beneficiary_id: [AADHAAR RECEIVED \u2192 DESTROYED]", "amber"]],500,d);
   d=runChecks([["pass", "PASS (live birth in HMIS at this hospital)"], ["pass", "PASS (JSY enrollment confirmed)"], ["pass", "PASS (Civil Hospital Rohtak empanelled)"], ["pass", "PASS"]],d+200,500);
-  d=logSeq([["DECISION: DELIVERY_VERIFIED", "big"], ["zk_certificate: 0xABC123...DEF456", ""], ["trigger_settlement: true | PFMS | \u20b91,400", ""], ["Settlement instruction fired to Haryana Execution Gateway", ""], ["Resolved in 2.6 seconds", "grey"]],500,d);
+  d=logSeq([["DECISION: DELIVERY_VERIFIED", "big"], ["certificate_sha256: 0xABC123...DEF456", ""], ["trigger_settlement: true | PFMS | \u20b91,400", ""], ["Settlement instruction fired to Haryana Execution Gateway", ""], ["Resolved in 2.6 seconds", "grey"]],500,d);
   later(function(){ decision('green',"\u20b91,400 released to Priya Sharma | PFMS | " + ts() + ""); },d-400);
 }
 
@@ -230,7 +230,7 @@ function F4(){ reset(); fireEvent();
   d+=2000;
   d=logSeq([["SECOND_VERIFICATION_PULL: Beneficiary_Registry | Fresh reading", ""], ["Second reading: hospital code CH-RTK-01 confirmed (stale record refreshed)", ""], ["CONFLICT_RESOLVED \u2014 verification continues", "big"], ["beneficiary_id: [AADHAAR RECEIVED \u2192 DESTROYED]", "amber"]],500,d);
   d=runChecks([["pass", "PASS"], ["pass", "PASS"], ["pass", "PASS (hospital code confirmed on second pull)"], ["pass", "PASS"]],d+200,500);
-  d=logSeq([["DECISION: DELIVERY_VERIFIED", "big"], ["zk_certificate: 0x77E1A9...04BC33", ""], ["trigger_settlement: true | PFMS | \u20b91,400", ""], ["Settlement instruction fired to Haryana Execution Gateway", ""]],500,d);
+  d=logSeq([["DECISION: DELIVERY_VERIFIED", "big"], ["certificate_sha256: 0x77E1A9...04BC33", ""], ["trigger_settlement: true | PFMS | \u20b91,400", ""], ["Settlement instruction fired to Haryana Execution Gateway", ""]],500,d);
   later(function(){ decision('green',"\u20b91,400 released to Priya Sharma | PFMS | " + ts() + ""); },d-400);
 }
 
@@ -253,7 +253,7 @@ function F6(){ reset(); fireEvent();
   var d=200;
   d=logSeq([["API call received: POST /v1/verify | event_type: jsy_hospital_delivery", ""], ["Source 1 received: HMIS_API | Civil Hospital Rohtak | live birth registered", ""], ["Source 2 received: Beneficiary_Registry | JSY enrollment confirmed", ""], ["Consensus check: PASS", ""], ["beneficiary_id: [AADHAAR RECEIVED \u2192 DESTROYED]", "amber"]],500,d);
   d=runChecks([["pass", "PASS"], ["pass", "PASS"], ["pass", "PASS"], ["pass", "PASS"]],d+200,500);
-  d=logSeq([["DECISION: DELIVERY_VERIFIED", "big"], ["zk_certificate: 0xABC123...DEF456 \u2014 PERMANENT", ""], ["SETTLEMENT_INSTRUCTION_FIRED to Haryana Execution Gateway", ""], ["PAYMENT_RAIL_TIMEOUT \u2014 PFMS network did not respond", "red"], ["CERTIFICATE_VALID \u2014 PERMANENT. No re-verification required.", "big"], ["AWAITING_RESUBMISSION", "amber"]],500,d);
+  d=logSeq([["DECISION: DELIVERY_VERIFIED", "big"], ["certificate_sha256: 0xABC123...DEF456 \u2014 PERMANENT", ""], ["SETTLEMENT_INSTRUCTION_FIRED to Haryana Execution Gateway", ""], ["PAYMENT_RAIL_TIMEOUT \u2014 PFMS network did not respond", "red"], ["CERTIFICATE_VALID \u2014 PERMANENT. No re-verification required.", "big"], ["AWAITING_RESUBMISSION", "amber"]],500,d);
   later(function(){ decision('amber',"Payment Rail Timeout \u2014 Certificate Valid \u2014 Resubmit<br><button id=\"resubmitBtn\">RESUBMIT</button>"); },d-400);
 }
 
