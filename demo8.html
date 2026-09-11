@@ -193,7 +193,7 @@ function F1(){ reset(); fireEvent();
   var d=200;
   d=logSeq([["API call received: POST /v1/verify | event_type: b2b_rtgs_verification | invoice: TATASTL-9921 | corridor: Mumbai-Surat", ""], ["Source 1 received: GSTN_Portal_API | invoice TATASTL-9921 found | \u20b94.75 Cr | JSW Infrastructure GSTIN", ""], ["Source 2 received: Bank_Account_Registry | beneficiary account matches GSTIN-registered account", ""], ["Consensus check: PASS \u2014 both sources agree", ""], ["beneficiary_id: [GSTIN/IFSC RECEIVED \u2192 DESTROYED \u2014 DPDP Compliant]", "amber"]],500,d);
   d=runChecks([["pass", "PASS (invoice found in GSTN)"], ["pass", "PASS (GSTIN active, returns filed)"], ["pass", "PASS (account matches GSTN-registered account)"], ["pass", "PASS"]],d+200,500);
-  d=logSeq([["DECISION: INVOICE_VERIFIED", "big"], ["zk_certificate: 0xRTGS441...B2B99 | SHA-256 signed", ""], ["trigger_settlement: true | RTGS | \u20b94,75,00,000 \u2192 JSW Infrastructure Ltd", ""], ["Settlement instruction fired to SBI Corporate Execution Gateway", ""], ["Resolved in 2.6 seconds", "grey"]],500,d);
+  d=logSeq([["DECISION: INVOICE_VERIFIED", "big"], ["certificate_sha256: 0xRTGS441...B2B99 | SHA-256 signed", ""], ["trigger_settlement: true | RTGS | \u20b94,75,00,000 \u2192 JSW Infrastructure Ltd", ""], ["Settlement instruction fired to SBI Corporate Execution Gateway", ""], ["Resolved in 2.6 seconds", "grey"]],500,d);
   later(function(){ decision('green',"\u20b94,75,00,000 released to JSW Infrastructure Ltd | RTGS | Invoice TATASTL-9921 | " + ts() + ""); },d-400);
 }
 
@@ -228,7 +228,7 @@ function F4(){ reset(); fireEvent();
   d+=2000;
   d=logSeq([["SECOND_VERIFICATION_PULL: GSTN_Portal_API | Fresh call", ""], ["Second reading: invoice TATASTL-9921 found | \u20b94.75 Cr | JSW Infrastructure GSTIN", ""], ["RESOLVED \u2014 verification continues", "big"], ["beneficiary_id: [GSTIN/IFSC RECEIVED \u2192 DESTROYED \u2014 DPDP Compliant]", "amber"]],500,d);
   d=runChecks([["pass", "PASS (invoice found on second pull)"], ["pass", "PASS (GSTIN active)"], ["pass", "PASS (account match)"], ["pass", "PASS"]],d+200,500);
-  d=logSeq([["DECISION: INVOICE_VERIFIED", "big"], ["zk_certificate: 0xRTGS441...B2B99 | SHA-256 signed", ""], ["trigger_settlement: true | RTGS | \u20b94,75,00,000 \u2192 JSW Infrastructure Ltd", ""], ["Settlement instruction fired to SBI Corporate Execution Gateway", ""]],500,d);
+  d=logSeq([["DECISION: INVOICE_VERIFIED", "big"], ["certificate_sha256: 0xRTGS441...B2B99 | SHA-256 signed", ""], ["trigger_settlement: true | RTGS | \u20b94,75,00,000 \u2192 JSW Infrastructure Ltd", ""], ["Settlement instruction fired to SBI Corporate Execution Gateway", ""]],500,d);
   later(function(){ decision('green',"\u20b94,75,00,000 released to JSW Infrastructure Ltd | RTGS | Invoice TATASTL-9921 | " + ts() + ""); },d-400);
 }
 
@@ -251,7 +251,7 @@ function F6(){ reset(); fireEvent();
   var d=200;
   d=logSeq([["API call received: POST /v1/verify | event_type: b2b_rtgs_verification | invoice: TATASTL-9921", ""], ["Source 1 received: GSTN_Portal_API | invoice TATASTL-9921 found | \u20b94.75 Cr", ""], ["Source 2 received: Bank_Account_Registry | beneficiary account matches", ""], ["Consensus check: PASS", ""], ["beneficiary_id: [GSTIN/IFSC RECEIVED \u2192 DESTROYED \u2014 DPDP Compliant]", "amber"]],500,d);
   d=runChecks([["pass", "PASS"], ["pass", "PASS"], ["pass", "PASS"], ["pass", "PASS"]],d+200,500);
-  d=logSeq([["DECISION: INVOICE_VERIFIED", "big"], ["zk_certificate: 0xRTGS441...B2B99 \u2014 PERMANENT", ""], ["SETTLEMENT_INSTRUCTION_FIRED to SBI Corporate Execution Gateway", ""], ["PAYMENT_RAIL_TIMEOUT \u2014 RTGS network did not respond", "red"], ["CERTIFICATE_VALID \u2014 PERMANENT. No re-verification required.", "big"], ["AWAITING_RESUBMISSION", "amber"]],500,d);
+  d=logSeq([["DECISION: INVOICE_VERIFIED", "big"], ["certificate_sha256: 0xRTGS441...B2B99 \u2014 PERMANENT", ""], ["SETTLEMENT_INSTRUCTION_FIRED to SBI Corporate Execution Gateway", ""], ["PAYMENT_RAIL_TIMEOUT \u2014 RTGS network did not respond", "red"], ["CERTIFICATE_VALID \u2014 PERMANENT. No re-verification required.", "big"], ["AWAITING_RESUBMISSION", "amber"]],500,d);
   later(function(){ decision('amber',"Payment Rail Timeout \u2014 Certificate Valid \u2014 Resubmit<br><button id=\"resubmitBtn\">RESUBMIT</button>"); },d-400);
 }
 
