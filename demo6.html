@@ -193,7 +193,7 @@ function F1(){ reset(); fireEvent();
   var d=200;
   d=logSeq([["API call received: POST /v1/verify | event_type: supply_chain_sla_delivery | contract_id: VL-MM-2026-118", ""], ["Source 1 received: WMS_API | Chennai | 500 units dispatched", ""], ["Source 2 received: GPS_Fleet_Tracker | vehicle arrived at MegaMart DC, Bengaluru", ""], ["Consensus check: PASS \u2014 both sources agree", ""], ["contract_credentials: [RECEIVED \u2192 ENCRYPTED \u2192 NOT RETAINED]", "amber"]],500,d);
   d=runChecks([["pass", "PASS (500 units dispatched \u2265 contracted 500)"], ["pass", "PASS (vehicle arrived at Bengaluru DC)"], ["pass", "PASS (delivered at 41.2 hrs \u2014 inside 48-hour SLA)"], ["pass", "PASS"]],d+200,500);
-  d=logSeq([["DECISION: DELIVERY_SLA_VERIFIED", "big"], ["zk_certificate: 0xABC123...DEF456", ""], ["trigger_settlement: true | RTGS | \u20b92,50,000", ""], ["Settlement instruction fired to Counterparty Execution Gateway", ""], ["No invoice. No 30-day cycle. The contract enforced itself.", "grey"]],500,d);
+  d=logSeq([["DECISION: DELIVERY_SLA_VERIFIED", "big"], ["certificate_sha256: 0xABC123...DEF456", ""], ["trigger_settlement: true | RTGS | \u20b92,50,000", ""], ["Settlement instruction fired to Counterparty Execution Gateway", ""], ["No invoice. No 30-day cycle. The contract enforced itself.", "grey"]],500,d);
   later(function(){ decision('green',"\u20b92,50,000 released to Vikram Logistics | RTGS | Contract VL-MM-2026-118 | " + ts() + ""); },d-400);
 }
 
@@ -215,7 +215,7 @@ function F3(){ reset(); fireEvent();
   var d=200;
   d=logSeq([["API call received: POST /v1/verify | event_type: supply_chain_sla_delivery | contract_id: VL-MM-2026-118", ""], ["Source 1 received: WMS_API | Chennai | 500 units dispatched", ""], ["Source 2 received: GPS_Fleet_Tracker | vehicle arrived at MegaMart DC \u2014 52.0 hrs after dispatch", "red"], ["contract_credentials: [RECEIVED \u2192 ENCRYPTED \u2192 NOT RETAINED]", "amber"]],500,d);
   d=runChecks([["pass", "PASS (500 units dispatched)"], ["pass", "PASS (vehicle arrived at DC)"], ["fail", "FAIL (52.0 hrs \u2014 SLA window closed at 48 hrs)"], ["pass", "PASS"]],d+200,500);
-  d=logSeq([["DECISION: SLA_BREACH \u2014 PENALTY_CLAUSE_ENFORCED", "red"], ["Penalty calculated by engine: \u20b925,000 \u00d7 4 hours overdue = \u20b91,00,000", "amber"], ["zk_certificate: 0x7B44E1...C09A62", ""], ["trigger_settlement: true | RTGS | \u20b92,50,000 \u2212 \u20b91,00,000 = \u20b91,50,000 net", ""], ["Settlement instruction fired to Counterparty Execution Gateway", ""], ["No negotiation. No dispute meeting. The contract enforces itself in both directions.", "grey"]],500,d);
+  d=logSeq([["DECISION: SLA_BREACH \u2014 PENALTY_CLAUSE_ENFORCED", "red"], ["Penalty calculated by engine: \u20b925,000 \u00d7 4 hours overdue = \u20b91,00,000", "amber"], ["certificate_sha256: 0x7B44E1...C09A62", ""], ["trigger_settlement: true | RTGS | \u20b92,50,000 \u2212 \u20b91,00,000 = \u20b91,50,000 net", ""], ["Settlement instruction fired to Counterparty Execution Gateway", ""], ["No negotiation. No dispute meeting. The contract enforces itself in both directions.", "grey"]],500,d);
   later(function(){ decision('amber',"SLA BREACH \u2014 PENALTY CLAUSE ACTIVATED<br>\u20b91,00,000 deducted (\u20b925,000 \u00d7 4 hrs) | Net Settlement: \u20b91,50,000 to Vikram Logistics | RTGS | " + ts() + ""); },d-400);
 }
 
@@ -228,7 +228,7 @@ function F4(){ reset(); fireEvent();
   d+=2000;
   d=logSeq([["SECOND_VERIFICATION_PULL: GPS_Fleet_Tracker | Fresh reading", ""], ["Second reading: vehicle arrived at MegaMart DC (stale fix refreshed)", ""], ["CONFLICT_RESOLVED \u2014 verification continues", "big"], ["contract_credentials: [RECEIVED \u2192 ENCRYPTED \u2192 NOT RETAINED]", "amber"]],500,d);
   d=runChecks([["pass", "PASS (500 units)"], ["pass", "PASS (arrived at DC on second pull)"], ["pass", "PASS (inside SLA window)"], ["pass", "PASS"]],d+200,500);
-  d=logSeq([["DECISION: DELIVERY_SLA_VERIFIED", "big"], ["zk_certificate: 0xABC123...DEF456", ""], ["trigger_settlement: true | RTGS | \u20b92,50,000", ""], ["Settlement instruction fired to Counterparty Execution Gateway", ""]],500,d);
+  d=logSeq([["DECISION: DELIVERY_SLA_VERIFIED", "big"], ["certificate_sha256: 0xABC123...DEF456", ""], ["trigger_settlement: true | RTGS | \u20b92,50,000", ""], ["Settlement instruction fired to Counterparty Execution Gateway", ""]],500,d);
   later(function(){ decision('green',"\u20b92,50,000 released to Vikram Logistics | RTGS | Contract VL-MM-2026-118 | " + ts() + ""); },d-400);
 }
 
@@ -251,7 +251,7 @@ function F6(){ reset(); fireEvent();
   var d=200;
   d=logSeq([["API call received: POST /v1/verify | event_type: supply_chain_sla_delivery | contract_id: VL-MM-2026-118", ""], ["Source 1 received: WMS_API | Chennai | 500 units dispatched", ""], ["Source 2 received: GPS_Fleet_Tracker | vehicle arrived at MegaMart DC, Bengaluru", ""], ["Consensus check: PASS", ""], ["contract_credentials: [RECEIVED \u2192 ENCRYPTED \u2192 NOT RETAINED]", "amber"]],500,d);
   d=runChecks([["pass", "PASS"], ["pass", "PASS"], ["pass", "PASS"], ["pass", "PASS"]],d+200,500);
-  d=logSeq([["DECISION: DELIVERY_SLA_VERIFIED", "big"], ["zk_certificate: 0xABC123...DEF456 \u2014 PERMANENT", ""], ["SETTLEMENT_INSTRUCTION_FIRED to Counterparty Execution Gateway", ""], ["PAYMENT_RAIL_TIMEOUT \u2014 RTGS network did not respond", "red"], ["CERTIFICATE_VALID \u2014 PERMANENT. No re-verification required.", "big"], ["AWAITING_RESUBMISSION", "amber"]],500,d);
+  d=logSeq([["DECISION: DELIVERY_SLA_VERIFIED", "big"], ["certificate_sha256: 0xABC123...DEF456 \u2014 PERMANENT", ""], ["SETTLEMENT_INSTRUCTION_FIRED to Counterparty Execution Gateway", ""], ["PAYMENT_RAIL_TIMEOUT \u2014 RTGS network did not respond", "red"], ["CERTIFICATE_VALID \u2014 PERMANENT. No re-verification required.", "big"], ["AWAITING_RESUBMISSION", "amber"]],500,d);
   later(function(){ decision('amber',"Payment Rail Timeout \u2014 Certificate Valid \u2014 Resubmit<br><button id=\"resubmitBtn\">RESUBMIT</button>"); },d-400);
 }
 
