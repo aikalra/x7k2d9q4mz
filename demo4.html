@@ -194,7 +194,7 @@ function F1(){ reset(); fireEvent();
   var d=200;
   d=logSeq([["API call received: POST /v1/verify | event_type: mgnregs_work_attendance | site_code: 042", ""], ["Source 1 received: NREGASoft_API | Site 042 | attendance present | 8 hours logged", ""], ["Source 2 received: GPS_Geofence | coordinates inside Site 042 registered geofence", ""], ["Consensus check: PASS \u2014 both sources agree", ""], ["worker_id: [AADHAAR RECEIVED \u2192 DESTROYED]", "amber"]],500,d);
   d=runChecks([["pass", "PASS (8 hours logged \u2265 8-hour threshold)"], ["pass", "PASS (attendance present in NREGASoft)"], ["pass", "PASS (GPS matches Site 042 geofence)"], ["pass", "PASS"]],d+200,500);
-  d=logSeq([["DECISION: WORK_EVENT_VERIFIED", "big"], ["zk_certificate: 0xMNO345...PQR678", ""], ["trigger_settlement: true | e-Rupee / CBDC | \u20b9220", ""], ["Settlement instruction fired to RBI CBDC Execution Gateway", ""], ["Resolved in 2.5 seconds", "grey"]],500,d);
+  d=logSeq([["DECISION: WORK_EVENT_VERIFIED", "big"], ["certificate_sha256: 0xMNO345...PQR678", ""], ["trigger_settlement: true | e-Rupee / CBDC | \u20b9220", ""], ["Settlement instruction fired to RBI CBDC Execution Gateway", ""], ["Resolved in 2.5 seconds", "grey"]],500,d);
   later(function(){ decision('green',"\u20b9220 released to Geeta Devi | e-Rupee / CBDC | " + ts() + ""); },d-400);
 }
 
@@ -229,7 +229,7 @@ function F4(){ reset(); fireEvent();
   d+=2000;
   d=logSeq([["SECOND_VERIFICATION_PULL: GPS_Geofence | Fresh reading", ""], ["Second reading: coordinates inside Site 042 geofence (stale fix refreshed)", ""], ["CONFLICT_RESOLVED \u2014 verification continues", "big"], ["worker_id: [AADHAAR RECEIVED \u2192 DESTROYED]", "amber"]],500,d);
   d=runChecks([["pass", "PASS (8 hours)"], ["pass", "PASS (attendance present)"], ["pass", "PASS (geofence match on second pull)"], ["pass", "PASS"]],d+200,500);
-  d=logSeq([["DECISION: WORK_EVENT_VERIFIED", "big"], ["zk_certificate: 0x29B7E4...C60D18", ""], ["trigger_settlement: true | e-Rupee / CBDC | \u20b9220", ""], ["Settlement instruction fired to RBI CBDC Execution Gateway", ""]],500,d);
+  d=logSeq([["DECISION: WORK_EVENT_VERIFIED", "big"], ["certificate_sha256: 0x29B7E4...C60D18", ""], ["trigger_settlement: true | e-Rupee / CBDC | \u20b9220", ""], ["Settlement instruction fired to RBI CBDC Execution Gateway", ""]],500,d);
   later(function(){ decision('green',"\u20b9220 released to Geeta Devi | e-Rupee / CBDC | " + ts() + ""); },d-400);
 }
 
@@ -252,7 +252,7 @@ function F6(){ reset(); fireEvent();
   var d=200;
   d=logSeq([["API call received: POST /v1/verify | event_type: mgnregs_work_attendance | site_code: 042", ""], ["Source 1 received: NREGASoft_API | Site 042 | attendance present | 8 hours logged", ""], ["Source 2 received: GPS_Geofence | coordinates inside Site 042 geofence", ""], ["Consensus check: PASS", ""], ["worker_id: [AADHAAR RECEIVED \u2192 DESTROYED]", "amber"]],500,d);
   d=runChecks([["pass", "PASS"], ["pass", "PASS"], ["pass", "PASS"], ["pass", "PASS"]],d+200,500);
-  d=logSeq([["DECISION: WORK_EVENT_VERIFIED", "big"], ["zk_certificate: 0xMNO345...PQR678 \u2014 PERMANENT", ""], ["SETTLEMENT_INSTRUCTION_FIRED to RBI CBDC Execution Gateway", ""], ["PAYMENT_RAIL_TIMEOUT \u2014 e-Rupee network did not respond", "red"], ["CERTIFICATE_VALID \u2014 PERMANENT. No re-verification required.", "big"], ["AWAITING_RESUBMISSION", "amber"]],500,d);
+  d=logSeq([["DECISION: WORK_EVENT_VERIFIED", "big"], ["certificate_sha256: 0xMNO345...PQR678 \u2014 PERMANENT", ""], ["SETTLEMENT_INSTRUCTION_FIRED to RBI CBDC Execution Gateway", ""], ["PAYMENT_RAIL_TIMEOUT \u2014 e-Rupee network did not respond", "red"], ["CERTIFICATE_VALID \u2014 PERMANENT. No re-verification required.", "big"], ["AWAITING_RESUBMISSION", "amber"]],500,d);
   later(function(){ decision('amber',"Payment Rail Timeout \u2014 Certificate Valid \u2014 Resubmit<br><button id=\"resubmitBtn\">RESUBMIT</button>"); },d-400);
 }
 
