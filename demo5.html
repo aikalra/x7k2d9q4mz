@@ -193,7 +193,7 @@ function F1(){ reset(); fireEvent();
   var d=200;
   d=logSeq([["API call received: POST /v1/verify | event_type: ondc_delivery_confirmation | order_id: ONDC_MH_ORDER_78432", ""], ["Source 1 received: Delivery_Agent_GPS | agent at buyer registered address, Mumbai", ""], ["Source 2 received: ONDC_OMS_API | order status: DELIVERED", ""], ["Consensus check: PASS \u2014 both sources agree", ""], ["merchant_credential: [RECEIVED \u2192 TOKENISED \u2014 PCI COMPLIANT]", "amber"]],500,d);
   d=runChecks([["pass", "PASS (agent GPS at buyer address)"], ["pass", "PASS (OMS status: Delivered)"], ["pass", "PASS (within accepted geofence radius)"], ["pass", "PASS"]],d+200,500);
-  d=logSeq([["DECISION: DELIVERY_VERIFIED", "big"], ["zk_certificate: 0xSTU901...VWX234", ""], ["trigger_settlement: true | UPI | \u20b94,200", ""], ["Settlement instruction fired to ONDC Payment Aggregator Execution Gateway", ""], ["Resolved in 2.3 seconds \u2014 not in 7 days, not after reconciliation. Now.", "grey"]],500,d);
+  d=logSeq([["DECISION: DELIVERY_VERIFIED", "big"], ["certificate_sha256: 0xSTU901...VWX234", ""], ["trigger_settlement: true | UPI | \u20b94,200", ""], ["Settlement instruction fired to ONDC Payment Aggregator Execution Gateway", ""], ["Resolved in 2.3 seconds \u2014 not in 7 days, not after reconciliation. Now.", "grey"]],500,d);
   later(function(){ decision('green',"\u20b94,200 released to Arjun Kumar | UPI | Order ONDC_MH_ORDER_78432 | " + ts() + ""); },d-400);
 }
 
@@ -228,7 +228,7 @@ function F4(){ reset(); fireEvent();
   d+=2000;
   d=logSeq([["SECOND_VERIFICATION_PULL: Delivery_Agent_GPS | Fresh reading", ""], ["Second reading: agent at buyer registered address (GPS drift corrected)", ""], ["CONFLICT_RESOLVED \u2014 verification continues", "big"], ["merchant_credential: [RECEIVED \u2192 TOKENISED \u2014 PCI COMPLIANT]", "amber"]],500,d);
   d=runChecks([["pass", "PASS (agent at buyer address on second pull)"], ["pass", "PASS (OMS status: Delivered)"], ["pass", "PASS (within geofence)"], ["pass", "PASS"]],d+200,500);
-  d=logSeq([["DECISION: DELIVERY_VERIFIED", "big"], ["zk_certificate: 0x83F1C7...D5A902", ""], ["trigger_settlement: true | UPI | \u20b94,200", ""], ["Settlement instruction fired to ONDC Payment Aggregator Execution Gateway", ""]],500,d);
+  d=logSeq([["DECISION: DELIVERY_VERIFIED", "big"], ["certificate_sha256: 0x83F1C7...D5A902", ""], ["trigger_settlement: true | UPI | \u20b94,200", ""], ["Settlement instruction fired to ONDC Payment Aggregator Execution Gateway", ""]],500,d);
   later(function(){ decision('green',"\u20b94,200 released to Arjun Kumar | UPI | Order ONDC_MH_ORDER_78432 | " + ts() + ""); },d-400);
 }
 
@@ -251,7 +251,7 @@ function F6(){ reset(); fireEvent();
   var d=200;
   d=logSeq([["API call received: POST /v1/verify | event_type: ondc_delivery_confirmation | order_id: ONDC_MH_ORDER_78432", ""], ["Source 1 received: Delivery_Agent_GPS | agent at buyer registered address", ""], ["Source 2 received: ONDC_OMS_API | order status: DELIVERED", ""], ["Consensus check: PASS", ""], ["merchant_credential: [RECEIVED \u2192 TOKENISED \u2014 PCI COMPLIANT]", "amber"]],500,d);
   d=runChecks([["pass", "PASS"], ["pass", "PASS"], ["pass", "PASS"], ["pass", "PASS"]],d+200,500);
-  d=logSeq([["DECISION: DELIVERY_VERIFIED", "big"], ["zk_certificate: 0xSTU901...VWX234 \u2014 PERMANENT", ""], ["SETTLEMENT_INSTRUCTION_FIRED to ONDC Payment Aggregator Execution Gateway", ""], ["PAYMENT_RAIL_TIMEOUT \u2014 UPI network did not respond", "red"], ["CERTIFICATE_VALID \u2014 PERMANENT. No re-verification required.", "big"], ["AWAITING_RESUBMISSION", "amber"]],500,d);
+  d=logSeq([["DECISION: DELIVERY_VERIFIED", "big"], ["certificate_sha256: 0xSTU901...VWX234 \u2014 PERMANENT", ""], ["SETTLEMENT_INSTRUCTION_FIRED to ONDC Payment Aggregator Execution Gateway", ""], ["PAYMENT_RAIL_TIMEOUT \u2014 UPI network did not respond", "red"], ["CERTIFICATE_VALID \u2014 PERMANENT. No re-verification required.", "big"], ["AWAITING_RESUBMISSION", "amber"]],500,d);
   later(function(){ decision('amber',"Payment Rail Timeout \u2014 Certificate Valid \u2014 Resubmit<br><button id=\"resubmitBtn\">RESUBMIT</button>"); },d-400);
 }
 
