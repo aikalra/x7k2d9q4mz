@@ -193,7 +193,7 @@ function F1(){ reset(); fireEvent();
   var d=200;
   d=logSeq([["API call received: POST /v1/verify | event_type: parametric_insurance_trigger | farmer: PMFBY-7734", ""], ["Source 1 received: IMD_Weather_Station | Osmanabad | rainfall 42% below seasonal threshold", ""], ["Source 2 received: ISRO_Satellite | soil moisture stress confirmed \u2014 soybean crop, growth window", ""], ["Consensus check: PASS \u2014 both sources confirm trigger condition", ""], ["farmer_id: [AADHAAR/PMFBY RECEIVED \u2192 DESTROYED \u2014 DPDP Compliant]", "amber"]],500,d);
   d=runChecks([["pass", "PASS (rainfall below parametric threshold)"], ["pass", "PASS (soil moisture stress confirmed)"], ["pass", "PASS (soybean crop enrolled, PMFBY-7734)"], ["pass", "PASS"]],d+200,500);
-  d=logSeq([["DECISION: PAYOUT_TRIGGERED", "big"], ["zk_certificate: 0xPMFBY734...eRUPEE | SHA-256 signed", ""], ["trigger_payout: true | e-Rupee CBDC | \u20b938,500 \u2192 farmer wallet", ""], ["Settlement instruction fired to RBI CBDC Execution Gateway", ""], ["No assessor. No claim form. No 90-day wait.", "grey"]],500,d);
+  d=logSeq([["DECISION: PAYOUT_TRIGGERED", "big"], ["certificate_sha256: 0xPMFBY734...eRUPEE | SHA-256 signed", ""], ["trigger_payout: true | e-Rupee CBDC | \u20b938,500 \u2192 farmer wallet", ""], ["Settlement instruction fired to RBI CBDC Execution Gateway", ""], ["No assessor. No claim form. No 90-day wait.", "grey"]],500,d);
   later(function(){ decision('green',"\u20b938,500 credited to Ramesh Patil | e-Rupee CBDC Wallet | " + ts() + ""); },d-400);
 }
 
@@ -228,7 +228,7 @@ function F4(){ reset(); fireEvent();
   d+=2000;
   d=logSeq([["SECOND_VERIFICATION_PULL: ISRO_Satellite | Fresh pass", ""], ["Second reading: soil moisture stress confirmed (cloud cover cleared)", ""], ["CONFLICT_RESOLVED \u2014 verification continues", "big"], ["farmer_id: [AADHAAR/PMFBY RECEIVED \u2192 DESTROYED \u2014 DPDP Compliant]", "amber"]],500,d);
   d=runChecks([["pass", "PASS (rainfall below threshold)"], ["pass", "PASS (soil stress on second pass)"], ["pass", "PASS (crop enrolled)"], ["pass", "PASS"]],d+200,500);
-  d=logSeq([["DECISION: PAYOUT_TRIGGERED", "big"], ["zk_certificate: 0xPMFBY734...eRUPEE | SHA-256 signed", ""], ["trigger_payout: true | e-Rupee CBDC | \u20b938,500 \u2192 farmer wallet", ""], ["Settlement instruction fired to RBI CBDC Execution Gateway", ""]],500,d);
+  d=logSeq([["DECISION: PAYOUT_TRIGGERED", "big"], ["certificate_sha256: 0xPMFBY734...eRUPEE | SHA-256 signed", ""], ["trigger_payout: true | e-Rupee CBDC | \u20b938,500 \u2192 farmer wallet", ""], ["Settlement instruction fired to RBI CBDC Execution Gateway", ""]],500,d);
   later(function(){ decision('green',"\u20b938,500 credited to Ramesh Patil | e-Rupee CBDC Wallet | " + ts() + ""); },d-400);
 }
 
@@ -251,7 +251,7 @@ function F6(){ reset(); fireEvent();
   var d=200;
   d=logSeq([["API call received: POST /v1/verify | event_type: parametric_insurance_trigger | farmer: PMFBY-7734", ""], ["Source 1 received: IMD_Weather_Station | Osmanabad | rainfall below threshold", ""], ["Source 2 received: ISRO_Satellite | soil moisture stress confirmed", ""], ["Consensus check: PASS", ""], ["farmer_id: [AADHAAR/PMFBY RECEIVED \u2192 DESTROYED \u2014 DPDP Compliant]", "amber"]],500,d);
   d=runChecks([["pass", "PASS"], ["pass", "PASS"], ["pass", "PASS"], ["pass", "PASS"]],d+200,500);
-  d=logSeq([["DECISION: PAYOUT_TRIGGERED", "big"], ["zk_certificate: 0xPMFBY734...eRUPEE \u2014 PERMANENT", ""], ["SETTLEMENT_INSTRUCTION_FIRED to RBI CBDC Execution Gateway", ""], ["PAYOUT_RAIL_TIMEOUT \u2014 e-Rupee network did not respond", "red"], ["CERTIFICATE_VALID \u2014 PERMANENT. No re-verification required.", "big"], ["AWAITING_RESUBMISSION", "amber"]],500,d);
+  d=logSeq([["DECISION: PAYOUT_TRIGGERED", "big"], ["certificate_sha256: 0xPMFBY734...eRUPEE \u2014 PERMANENT", ""], ["SETTLEMENT_INSTRUCTION_FIRED to RBI CBDC Execution Gateway", ""], ["PAYOUT_RAIL_TIMEOUT \u2014 e-Rupee network did not respond", "red"], ["CERTIFICATE_VALID \u2014 PERMANENT. No re-verification required.", "big"], ["AWAITING_RESUBMISSION", "amber"]],500,d);
   later(function(){ decision('amber',"Payment Rail Timeout \u2014 Certificate Valid \u2014 Resubmit<br><button id=\"resubmitBtn\">RESUBMIT</button>"); },d-400);
 }
 
