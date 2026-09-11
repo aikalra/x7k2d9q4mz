@@ -194,7 +194,7 @@ function F1(){ reset(); fireEvent();
   var d=200;
   d=logSeq([["API call received: POST /v1/verify | event_type: crop_insurance_drought", ""], ["Source 1 received: IMD_Weather_API | Banda district | 6.2mm \u2014 below 10mm threshold", ""], ["Source 2 received: ISRO_Satellite_Feed | Banda district | 6.4mm \u2014 below 10mm threshold", ""], ["Consensus check: PASS \u2014 both sources confirm threshold breach", ""], ["farmer_ids: [AADHAAR RECEIVED \u2192 DESTROYED]", "amber"]],500,d);
   d=runChecks([["pass", "PASS (IMD 6.2mm < 10mm threshold)"], ["pass", "PASS (Banda notified PMFBY district)"], ["pass", "PASS (4,847 enrolled beneficiaries)"], ["pass", "PASS"]],d+200,500);
-  d=logSeq([["DECISION: DROUGHT_EVENT_VERIFIED", "big"], ["zk_certificate: 0xGHI789...JKL012", ""], ["trigger_settlement: true | PM-FASAL | \u20b98,500 \u00d7 4,847 farmers", ""], ["Settlement instruction fired to UP Agriculture Execution Gateway", ""], ["Resolved in 2.8 seconds", "grey"]],500,d);
+  d=logSeq([["DECISION: DROUGHT_EVENT_VERIFIED", "big"], ["certificate_sha256: 0xGHI789...JKL012", ""], ["trigger_settlement: true | PM-FASAL | \u20b98,500 \u00d7 4,847 farmers", ""], ["Settlement instruction fired to UP Agriculture Execution Gateway", ""], ["Resolved in 2.8 seconds", "grey"]],500,d);
   later(function(){ decision('green',"\u20b98,500 \u00d7 4,847 farmers | PM-FASAL / DBT | Total: \u20b941,199,500"); },d-400);
 }
 
@@ -229,7 +229,7 @@ function F4(){ reset(); fireEvent();
   d+=2000;
   d=logSeq([["SECOND_VERIFICATION_PULL: ISRO_Satellite_Feed | Fresh reading", ""], ["Second reading: 6.4mm \u2014 below threshold (earlier payload was stale)", ""], ["CONFLICT_RESOLVED \u2014 verification continues", "big"], ["farmer_ids: [AADHAAR RECEIVED \u2192 DESTROYED]", "amber"]],500,d);
   d=runChecks([["pass", "PASS (both sources below threshold)"], ["pass", "PASS (notified district)"], ["pass", "PASS (4,847 enrolled)"], ["pass", "PASS"]],d+200,500);
-  d=logSeq([["DECISION: DROUGHT_EVENT_VERIFIED", "big"], ["zk_certificate: 0x55D2C8...A91F04", ""], ["trigger_settlement: true | PM-FASAL | \u20b98,500 \u00d7 4,847 farmers", ""], ["Settlement instruction fired to UP Agriculture Execution Gateway", ""]],500,d);
+  d=logSeq([["DECISION: DROUGHT_EVENT_VERIFIED", "big"], ["certificate_sha256: 0x55D2C8...A91F04", ""], ["trigger_settlement: true | PM-FASAL | \u20b98,500 \u00d7 4,847 farmers", ""], ["Settlement instruction fired to UP Agriculture Execution Gateway", ""]],500,d);
   later(function(){ decision('green',"\u20b98,500 \u00d7 4,847 farmers | PM-FASAL / DBT | Total: \u20b941,199,500"); },d-400);
 }
 
@@ -252,7 +252,7 @@ function F6(){ reset(); fireEvent();
   var d=200;
   d=logSeq([["API call received: POST /v1/verify | event_type: crop_insurance_drought", ""], ["Source 1 received: IMD_Weather_API | Banda district | 6.2mm \u2014 below 10mm threshold", ""], ["Source 2 received: ISRO_Satellite_Feed | Banda district | 6.4mm \u2014 below 10mm threshold", ""], ["Consensus check: PASS", ""], ["farmer_ids: [AADHAAR RECEIVED \u2192 DESTROYED]", "amber"]],500,d);
   d=runChecks([["pass", "PASS"], ["pass", "PASS"], ["pass", "PASS"], ["pass", "PASS"]],d+200,500);
-  d=logSeq([["DECISION: DROUGHT_EVENT_VERIFIED", "big"], ["zk_certificate: 0xGHI789...JKL012 \u2014 PERMANENT", ""], ["SETTLEMENT_INSTRUCTION_FIRED to UP Agriculture Execution Gateway", ""], ["PAYMENT_RAIL_TIMEOUT \u2014 PM-FASAL network did not respond", "red"], ["CERTIFICATE_VALID \u2014 PERMANENT. No re-verification required.", "big"], ["AWAITING_RESUBMISSION", "amber"]],500,d);
+  d=logSeq([["DECISION: DROUGHT_EVENT_VERIFIED", "big"], ["certificate_sha256: 0xGHI789...JKL012 \u2014 PERMANENT", ""], ["SETTLEMENT_INSTRUCTION_FIRED to UP Agriculture Execution Gateway", ""], ["PAYMENT_RAIL_TIMEOUT \u2014 PM-FASAL network did not respond", "red"], ["CERTIFICATE_VALID \u2014 PERMANENT. No re-verification required.", "big"], ["AWAITING_RESUBMISSION", "amber"]],500,d);
   later(function(){ decision('amber',"Payment Rail Timeout \u2014 Certificate Valid \u2014 Resubmit<br><button id=\"resubmitBtn\">RESUBMIT</button>"); },d-400);
 }
 
