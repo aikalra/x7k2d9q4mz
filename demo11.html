@@ -210,7 +210,7 @@ function F1(){ reset(); fireEvent();
   d=runChecks([['pass','PASS (Enrollment active, Ward 104)'],['pass','PASS (No death record; activity signal 6 days ago)'],['pass','PASS (No Sept-2026 payment on record)'],['pass','PASS']],d+200,500);
   d=logSeq([
     ['DECISION: PAY_AUTHORISED','big'],
-    ['zk_certificate: 0x7F3A91...C44E02'],
+    ['certificate_sha256: 0x7F3A91...C44E02'],
     ['trigger_settlement: true | DBT/PFMS | ₹2,000'],
     ['Settlement instruction fired to Karnataka DBT Execution Gateway'],
     ['Resolved in 2.7 seconds','grey']
@@ -276,7 +276,7 @@ function F4(){ reset(); fireEvent();
   d=runChecks([['pass','PASS (Enrollment active)'],['pass','PASS (Activity confirmed on second pull)'],['pass','PASS (No Sept-2026 payment on record)'],['pass','PASS']],d+200,500);
   d=logSeq([
     ['DECISION: PAY_AUTHORISED','big'],
-    ['zk_certificate: 0x91BD20...A77F19'],
+    ['certificate_sha256: 0x91BD20...A77F19'],
     ['trigger_settlement: true | DBT/PFMS | ₹2,000'],
     ['Settlement instruction fired to Karnataka DBT Execution Gateway']
   ],500,d+300);
@@ -320,7 +320,7 @@ function F6(){ reset(); fireEvent();
   d=runChecks([['pass','PASS'],['pass','PASS'],['pass','PASS'],['pass','PASS']],d+200,500);
   d=logSeq([
     ['DECISION: PAY_AUTHORISED','big'],
-    ['zk_certificate: 0x55C1E8...D09B73 — PERMANENT'],
+    ['certificate_sha256: 0x55C1E8...D09B73 — PERMANENT'],
     ['SETTLEMENT_INSTRUCTION_FIRED to Karnataka DBT Execution Gateway'],
     ['PAYMENT_RAIL_TIMEOUT — DBT network did not respond','red'],
     ['CERTIFICATE_VALID — PERMANENT. No re-verification required.','big'],
