@@ -195,7 +195,7 @@ function F1(){ reset(); fireEvent();
   var d=200;
   d=logSeq([["API call received: POST /v1/verify | event_type: crop_delivery_scan", ""], ["Source 1 received: DeHaat_Scanner_API | Centre 07 | 120kg | Grade A", ""], ["Source 2 received: GPS_Feed | Location locked to Centre 07", ""], ["Consensus check: PASS \u2014 both sources agree", ""], ["farmer_id: [AADHAAR RECEIVED \u2192 DESTROYED]", "amber"]],500,d);
   d=runChecks([["pass", "PASS (120kg > 100kg minimum)"], ["pass", "PASS (Grade A in [A, B])"], ["pass", "PASS (Centre 07 confirmed)"], ["pass", "PASS"]],d+200,500);
-  d=logSeq([["DECISION: DELIVERY_VERIFIED", "big"], ["zk_certificate: 0xDEF456...ABC789", ""], ["trigger_settlement: true | UPI | \u20b914,400", ""], ["Settlement instruction fired to DeHaat Execution Gateway", ""], ["Resolved in 2.4 seconds", "grey"]],500,d);
+  d=logSeq([["DECISION: DELIVERY_VERIFIED", "big"], ["certificate_sha256: 0xDEF456...ABC789", ""], ["trigger_settlement: true | UPI | \u20b914,400", ""], ["Settlement instruction fired to DeHaat Execution Gateway", ""], ["Resolved in 2.4 seconds", "grey"]],500,d);
   later(function(){ decision('green',"\u20b914,400 released to Ramesh Singh | UPI"); },d-400);
 }
 
@@ -231,7 +231,7 @@ function F4(){ reset(); fireEvent();
   d+=2000;
   d=logSeq([["SECOND_VERIFICATION_PULL: GPS_Feed | Fresh reading", ""], ["Second reading: Location locked to Centre 07", ""], ["RESOLVED \u2014 verification continues without interruption", "big"], ["farmer_id: [AADHAAR RECEIVED \u2192 DESTROYED]", "amber"]],500,d);
   d=runChecks([["pass", "PASS (120kg > 100kg minimum)"], ["pass", "PASS (Grade A in [A, B])"], ["pass", "PASS (Centre 07 on second pull)"], ["pass", "PASS"]],d+200,500);
-  d=logSeq([["DECISION: DELIVERY_VERIFIED", "big"], ["zk_certificate: 0x91BC20...7E4A11", ""], ["trigger_settlement: true | UPI | \u20b914,400", ""], ["Settlement instruction fired to DeHaat Execution Gateway", ""]],500,d);
+  d=logSeq([["DECISION: DELIVERY_VERIFIED", "big"], ["certificate_sha256: 0x91BC20...7E4A11", ""], ["trigger_settlement: true | UPI | \u20b914,400", ""], ["Settlement instruction fired to DeHaat Execution Gateway", ""]],500,d);
   later(function(){ decision('green',"\u20b914,400 released to Ramesh Singh | UPI"); },d-400);
 }
 
@@ -254,7 +254,7 @@ function F6(){ reset(); fireEvent();
   var d=200;
   d=logSeq([["API call received: POST /v1/verify | event_type: crop_delivery_scan", ""], ["Source 1 received: DeHaat_Scanner_API | Centre 07 | 120kg | Grade A", ""], ["Source 2 received: GPS_Feed | Location locked to Centre 07", ""], ["Consensus check: PASS \u2014 both sources agree", ""], ["farmer_id: [AADHAAR RECEIVED \u2192 DESTROYED]", "amber"]],500,d);
   d=runChecks([["pass", "PASS (120kg > 100kg minimum)"], ["pass", "PASS (Grade A in [A, B])"], ["pass", "PASS (Centre 07 confirmed)"], ["pass", "PASS"]],d+200,500);
-  d=logSeq([["DECISION: DELIVERY_VERIFIED", "big"], ["zk_certificate: 0x4AC811...D20F9B \u2014 PERMANENT", ""], ["SETTLEMENT_INSTRUCTION_FIRED to DeHaat Execution Gateway", ""], ["PAYMENT_RAIL_TIMEOUT \u2014 UPI network did not respond", "red"], ["CERTIFICATE_VALID \u2014 PERMANENT. No re-verification required.", "big"], ["AWAITING_RESUBMISSION", "amber"]],500,d);
+  d=logSeq([["DECISION: DELIVERY_VERIFIED", "big"], ["certificate_sha256: 0x4AC811...D20F9B \u2014 PERMANENT", ""], ["SETTLEMENT_INSTRUCTION_FIRED to DeHaat Execution Gateway", ""], ["PAYMENT_RAIL_TIMEOUT \u2014 UPI network did not respond", "red"], ["CERTIFICATE_VALID \u2014 PERMANENT. No re-verification required.", "big"], ["AWAITING_RESUBMISSION", "amber"]],500,d);
   later(function(){ decision('amber',"Payment Rail Timeout \u2014 Certificate Valid \u2014 Resubmit<br><button id=\"resubmitBtn\">RESUBMIT</button>"); },d-400);
 }
 
